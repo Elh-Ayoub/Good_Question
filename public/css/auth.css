@@ -1,0 +1,23 @@
+
+.color-checkbox:checked + .color-lable{
+    background-color: lightgray;
+    border-radius: 10px;
+}
+.fail{
+    background: rgb(163, 73, 73);
+    color: white;
+    text-align: center;
+    padding: 10px 5px;
+    border: 1px solid black;
+}
+.success{
+    background: rgb(134, 223, 134);
+    color: white;
+    text-align: center;
+    padding: 10px 5px;
+    border: 1px solid black;
+}
+.color-select:checked + label{
+    background-color: rgb(124, 124, 124);
+    border-radius: 10px;
+}

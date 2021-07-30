@@ -11,7 +11,5 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+ mix.copyDirectory('vendor/almasaeed2010/adminlte/dist', 'public/dist');
+ mix.copyDirectory('vendor/almasaeed2010/adminlte/plugins', 'public/plugins');
