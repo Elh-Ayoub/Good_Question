@@ -101,44 +101,9 @@
               </a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link active">
-              <i class="fas fa-user"></i>
-              <p>
-                Manage Users
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="" class="nav-link active">
-                  <i class="fas fa-plus mr-1 ml-2"></i>
-                  <p>Create user</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="fas fa-pen mr-1 ml-2"></i>
-                  <p>Edit user</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link">
-                  <i class="fas fa-times mr-1 ml-2"></i>
-                  <p>Delete user</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="fa fa-bookmark"></i>
-                <p>Orders</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="fa  fa-binoculars"></i>
-                <p>Track my Order</p>
+              <a href="{{route('admin.dashboard')}}" class="nav-link active">
+                <i class="fa fa-user"></i>
+                <p>Manage Users</p>
               </a>
           </li>
         </ul>
