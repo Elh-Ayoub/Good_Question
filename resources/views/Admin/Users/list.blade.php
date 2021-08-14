@@ -26,6 +26,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
+  <style>.title{cursor: pointer;}</style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -96,7 +97,7 @@
       @endif
       <!-- SidebarSearch Form -->
       <div class="form-inline mt-4">
-        <div class="input-group" data-widget="sidebar-search">
+        <div class="input-group">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
             <button class="btn btn-sidebar">
@@ -110,13 +111,13 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-              <a href="{{route('admin.dashboard')}}" class="nav-link active">
+              <a href="{{route('admin.dashboard')}}" class="nav-link">
                 <i class="fa fa-home"></i>
                 <p>Home</p>
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link">
+              <a href="{{route('admin.dashboard')}}" class="nav-link active">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
@@ -150,9 +151,18 @@
     <!-- Main content -->
     <p id="result"></p>
     <section class="content">
-    <div class="form-inline">
-        <div class="input-group mb-1" data-widget="sidebar-search">
-          <input type="text" id="myInput" onkeyup="searchbyName()" type="search" placeholder="Search...">
+    <div class="form-inline justify-content-between mb-2">
+        <a href="{{route('create.user.view')}}" class="btn btn-primary col-sm-2"><i class="fas fa-plus"></i> Create new User/Admin</a>
+        <div class="input-group mb-1">
+          <input type="text" id="searchByLogin" type="search" placeholder="Search by login...">
+            <div class="input-group-append">
+              <button class="btn btn-sidebar">
+               <i class="fas fa-search fa-fw"></i>
+              </button>
+            </div>
+        </div>
+        <div class="input-group mb-1">
+          <input type="text" id="searchByemail" type="search" placeholder="Search by email...">
             <div class="input-group-append">
               <button class="btn btn-sidebar">
                <i class="fas fa-search fa-fw"></i>
@@ -163,7 +173,33 @@
     <div class="card card-solid">
         <div class="card-body pb-0">
           <div class="row">
-              <h1>Hello there!!</h1>
+            <div class="callout callout-info alert-light" role="alert">To edit User/Admin profile click on his avatar</div>
+            <table class="table orders">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th><i class="fas fa-sort"></i><span class="title">Login</span></th>
+                        <th><i class="fas fa-sort"></i><span class="title">Email</span></th>
+                        <th><i class="fas fa-sort"></i><span class="title">Full name</span></th>
+                        <th><i class="fas fa-sort"></i><span class="title">Role</span></th>
+                        <th><i class="fas fa-sort"></i><span class="title">Rating</span></th>
+                        <th><i class="fas fa-sort"></i><span class="title">Created at</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($users as $user)
+                    <tr class="table-row">
+                        <td><img class="img-size-64" src="{{$user->profile_photo}}" alt="Avatar"></td>
+                        <td class="login">{{$user->login}}</td>
+                        <td class="email">{{$user->email}}</td>
+                        <td class="full_name">{{$user->full_name}}</td>
+                        <td>{{$user->role}}</td>
+                        <td>{{$user->rating}}</td>
+                        <td class="created_at">{{$user->created_at}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -229,6 +265,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/lazyLoading.js')}}"></script>
 <script src="{{ asset('js/search.js')}}"></script>
+<script src="{{ asset('js/sortTable.js')}}"></script>
 <script src="{{ asset('plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
 <script src="{{ asset('plugins/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
 </body>

@@ -141,8 +141,9 @@
   </aside>
     <div class="profileContainer">
         <div class="profile-picture">
-        <form  method="POST" action=""  enctype="multipart/form-data">
+        <form  method="POST" action="{{route('admin.update.avatar')}}"  enctype="multipart/form-data">
         @csrf
+        @method('PATCH')
             <img id="profile-pic" class="user-picture" src="{{Auth::user()->profile_photo}}">
             <div class="file-submit">
                 <label class="selectfile" for="choosefile">Edit profile picture</label>
@@ -151,7 +152,7 @@
             </div>
         </form>
         @if(strpos(Auth::user()->profile_photo, ".png") !== false)
-        <form method="POST" action="">
+        <form method="POST" action="{{route('admin.delete.avatar')}}">
             @csrf
             @method('DELETE')
             <input type="submit" class="deleteavatar" value="Remove Photo">
@@ -160,7 +161,7 @@
         </div>
         
         <div class="forms">
-            <form class="profileform" method="POST" action="">
+            <form class="profileform" method="POST" action="{{route('admin.update')}}">
                 <p style="font-size: medium; color: #2d3748">You can edit your personal information.</p>
                 @csrf
                 @method('PATCH')
@@ -190,7 +191,7 @@
                 @endif
             </form>
                 
-            <form class="profileform" method="POST" action="">
+            <form class="profileform" method="POST" action="{{route('admin.password')}}">
                 @csrf
                 @method('PATCH')
                 <p style="font-size: medium; color: #2d3748">You can edit your password.</p>

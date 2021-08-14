@@ -43,7 +43,7 @@
           <input type="text" class="form-control" placeholder="Login" name="login">
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+              <span class="fas fa-user"></span>
             </div>
           </div>
         </div>
@@ -71,10 +71,7 @@
       </form>
 
       <p class="mb-1">
-        <a href="forgot-password">I forgot my password</a>
-      </p>
-      <p class="mb-0">
-        <a href="register" class="text-center">Register a new membership</a>
+        <a href="{{route('password.forgot')}}">I forgot my password</a>
       </p>
       <p class="mb-0">
         <a href="{{route('verification.resend')}}" class="text-center">Verify email</a>

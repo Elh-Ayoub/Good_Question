@@ -18,7 +18,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{route('user.dashboard')}}"><b>WantOrder</b></a>
+    <a href="{{route('admin.dashboard')}}"><b>{{env('APP_NAME')}}</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -53,7 +53,7 @@
         </div>
       </form>
       <p class="mb-0">
-        <a href="{{route('auth.login')}}" class="text-center">Go back to sign in</a>
+        <a href="{{route('login')}}" class="text-center">Go back to sign in</a>
       </p>
     </div>
   </div>

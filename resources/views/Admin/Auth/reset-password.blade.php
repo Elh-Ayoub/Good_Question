@@ -19,7 +19,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-  <a href="{{route('user.dashboard')}}"><b>WantOrder</b></a>
+  <a href="{{route('admin.dashboard')}}"><b>WantOrder</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

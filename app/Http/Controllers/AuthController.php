@@ -21,21 +21,20 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'login' => 'required|string',
             'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
         ]);
-
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             if(Auth::user()->role == 'admin'){
                 return redirect('admin/home');
             }else{
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
                 return back()->with('fail', 'Only Admins can log in.');
             }
         }
-
-        return back()->with([
-            'fail' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with('fail', 'The provided credentials do not match our records.');
     }
     /**
      * Register a User.
@@ -77,7 +76,7 @@ class AuthController extends Controller
         return redirect('admin/auth/login');
     }
     public function useProfile() {
-        $data = ['loggedUserInfo' => User::where('id', session('loggedUser'))->first()];
+        $data = ['loggedUserInfo' => Auth::user()];
         return view('Admin.profile', $data);
     }
     public function dashboard(){
@@ -132,7 +131,7 @@ class AuthController extends Controller
             }
         );
         return $status === Password::PASSWORD_RESET
-                    ? redirect()->route('auth.login')->with('success', __($status))
+                    ? redirect()->route('login')->with('success', __($status))
                     : back()->with(['email' => [__($status)]]);
     }
 }
