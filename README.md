@@ -13,7 +13,7 @@
 
 ## About Project
 
-This is a Q&A web application, which the will allow administrators manage the users and posts, and users to create posts and comment or like other posts.
+This is a Q&A web application, which will allow administrators to manage the users and posts, and users to create posts and comment or like other posts.
 <h2>Technologies</h2>
 <ul>
     <li><b>Backend: </b> PHP (Laravel), MySQL. </li>
