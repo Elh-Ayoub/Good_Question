@@ -2,6 +2,7 @@
 /public/hot
 /public/dist
 /public/plugins
+/public/public
 /public/profile-pictures
 /public/storage
 /storage/*.key

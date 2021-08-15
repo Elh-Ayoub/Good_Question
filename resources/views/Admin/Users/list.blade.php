@@ -26,7 +26,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <style>.title{cursor: pointer;}</style>
+  <style>.title, .table-row{cursor: pointer;}</style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -117,7 +117,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('admin.dashboard')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link active">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
@@ -149,6 +149,23 @@
     <!-- /.content-header -->
     </section>
     <!-- Main content -->
+    @if(Session::get('success'))
+      <div class="alert alert-success col-sm-3" role="alert">
+        {{Session::get('success')}}
+      </div>
+    @endif
+    @if(Session::get('fail'))
+      <div class="alert alert-danger col-sm-3" role="alert">
+        {{Session::get('fail')}}
+      </div>
+    @endif
+    @if(Session::get('fail-arr'))
+      <div class="alert alert-danger col-sm-3" role="alert">
+        @foreach(Session::get('fail-arr') as $key => $err)
+          <p>{{$key . ': ' . $err[0]}}</p>
+        @endforeach
+      </div>
+    @endif
     <p id="result"></p>
     <section class="content">
     <div class="form-inline justify-content-between mb-2">
@@ -173,8 +190,7 @@
     <div class="card card-solid">
         <div class="card-body pb-0">
           <div class="row">
-            <div class="callout callout-info alert-light" role="alert">To edit User/Admin profile click on his avatar</div>
-            <table class="table orders">
+            <table class="table text-center orders table-hover">
                 <thead class="thead-dark">
                     <tr>
                         <th>#</th>
@@ -184,11 +200,12 @@
                         <th><i class="fas fa-sort"></i><span class="title">Role</span></th>
                         <th><i class="fas fa-sort"></i><span class="title">Rating</span></th>
                         <th><i class="fas fa-sort"></i><span class="title">Created at</span></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach($users as $user)
-                    <tr class="table-row">
+                    <tr class="table-row" data-id="{{$user->id}}">
                         <td><img class="img-size-64" src="{{$user->profile_photo}}" alt="Avatar"></td>
                         <td class="login">{{$user->login}}</td>
                         <td class="email">{{$user->email}}</td>
@@ -196,6 +213,7 @@
                         <td>{{$user->role}}</td>
                         <td>{{$user->rating}}</td>
                         <td class="created_at">{{$user->created_at}}</td>
+                        <td><a href="{{route('users.update.view', ['user' => $user->id])}}" type="button" class="btn btn-warning">Edit or Delete</a></td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -268,5 +286,11 @@
 <script src="{{ asset('js/sortTable.js')}}"></script>
 <script src="{{ asset('plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
 <script src="{{ asset('plugins/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
+<script>
+   $('.table-row').on('click', function(){
+      id = $(this).data('id');
+      window.location = "{{route('users.update.view')}}" + "?user="+id
+   })
+</script>
 </body>
 </html>

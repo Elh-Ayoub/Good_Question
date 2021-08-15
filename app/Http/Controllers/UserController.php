@@ -130,9 +130,35 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateProfiles(Request $request)
     {
-        //
+        $user = User::find($request->user);
+        $validator = Validator::make($request->all(), [
+            'login' => 'string|between:5,30',
+            'full_name' => 'string|between:5,30',
+            'email' => 'string|email|max:100',
+        ]);
+        if($validator->fails()){
+            return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
+        }
+        $profile_photo = $user->profile_photo;
+        if($user->login != $request->login && User::where('login', $request->login)->first()){
+            return back()->with('fail', 'Login already exist!');
+        }
+        if($user->email != $request->email && User::where('email', $request->email)->first()){
+            return back()->with('fail', 'Email already exist!');
+        }
+        if($request->file('profile_photo')){
+            File::delete(public_path(parse_url($user->profile_photo, PHP_URL_PATH)));
+            $profile_photo = $this->uploadImage($request);
+        }else if($request->input('login') && !$request->file('profile_photo') && $user->login !== $request->input('login') ){
+            $filename = str_replace(' ', '-', $request->input('login')) . '.png';
+            Storage::move(parse_url($user->profile_photo, PHP_URL_PATH),
+            '/profile-pictures/' . $filename);
+            $profile_photo = url('profile-pictures/'. $filename);
+        }
+        $user->update(array_merge($request->all(), ['profile_photo' => $profile_photo]));
+        return back()->with('success', 'Account Updated successfully!');
     }
     public function updateAdmin(Request $request)
     {
@@ -176,6 +202,10 @@ class UserController extends Controller
         }else{
             return back()->with('password-fail', 'Incorrect password!');
         }
+    }
+    public function deleteProfiles(Request $request){
+        User::destroy($request->user);
+        return redirect('admin/users')->with('success', 'Account deleted successfully!');
     }
     /**
      * Remove the specified resource from storage.

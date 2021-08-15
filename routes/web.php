@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Models\User;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,7 +68,9 @@ Route::group([
 ], function () {
     Route::get('/profile', [AuthController::class, 'useProfile'])->name('admin.profile');
     Route::get('/home', function () {
-        return view('Admin.home');
+        $users = count(User::where('role', 'user')->get());
+        $admins = count(User::where('role', 'admin')->get());
+        return view('Admin.home', ['users' => $users, 'admins' => $admins]);
     })->name('admin.dashboard');
     Route::get('create/user', function(){
         return view('Admin.Users.create');
@@ -77,4 +81,7 @@ Route::group([
     Route::patch('update/avatar', [UserController::class, 'UpdateAvatar'])->name('admin.update.avatar');
     Route::delete('delete/avatar', [UserController::class, 'setDefaultAvatar'])->name('admin.delete.avatar');
     Route::get('/users', function(){return view('Admin.Users.list', ['users' => User::all()]);})->name('users.list');
+    Route::get('update/users',function(Request $request){return view('Admin.Users.profile', ['user' => User::find($request->user)]);})->name('users.update.view');
+    Route::patch('update/users',[UserController::class, 'updateProfiles'])->name('users.update');
+    Route::delete('delete/users',[UserController::class, 'deleteProfiles'])->name('users.delete');
 });

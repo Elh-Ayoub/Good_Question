@@ -101,7 +101,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('admin.dashboard')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link active">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
