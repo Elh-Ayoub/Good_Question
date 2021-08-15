@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\VerifyEmailController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -84,4 +85,14 @@ Route::group([
     Route::get('update/users',function(Request $request){return view('Admin.Users.profile', ['user' => User::find($request->user)]);})->name('users.update.view');
     Route::patch('update/users',[UserController::class, 'updateProfiles'])->name('users.update');
     Route::delete('delete/users',[UserController::class, 'deleteProfiles'])->name('users.delete');
+});
+ //////////////////// ----------Posts module----------  ////////////////////
+ Route::group([
+    'middleware' => 'AuthCheck',
+    'prefix' => 'admin',
+], function () {
+    Route::get('/posts', [PostController::class, 'Postlist'])->name('posts.list');
+    Route::get('create/posts', function(){return view('Admin.Posts.create');})->name('posts.create.view');
+    Route::post('create/posts', [PostController::class, 'create'])->name('posts.create');
+
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;

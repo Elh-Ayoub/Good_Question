@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use DB;
-use File;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -152,10 +153,13 @@ class UserController extends Controller
             File::delete(public_path(parse_url($user->profile_photo, PHP_URL_PATH)));
             $profile_photo = $this->uploadImage($request);
         }else if($request->input('login') && !$request->file('profile_photo') && $user->login !== $request->input('login') ){
-            $filename = str_replace(' ', '-', $request->input('login')) . '.png';
-            Storage::move(parse_url($user->profile_photo, PHP_URL_PATH),
-            '/profile-pictures/' . $filename);
-            $profile_photo = url('profile-pictures/'. $filename);
+            if(str_contains(parse_url($user->profile_photo, PHP_URL_PATH), '.png')){
+                $filename = str_replace(' ', '-', $request->input('login')) . '.png';
+                Storage::move(parse_url($user->profile_photo, PHP_URL_PATH),
+                '/profile-pictures/' . $filename);
+                $profile_photo = url('profile-pictures/'. $filename);
+            }
+            
         }
         $user->update(array_merge($request->all(), ['profile_photo' => $profile_photo]));
         return back()->with('success', 'Account Updated successfully!');

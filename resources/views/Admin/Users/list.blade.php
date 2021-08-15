@@ -122,6 +122,12 @@
                 <p>Manage Users</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('posts.list')}}" class="nav-link">
+                <i class="fa fa-book"></i>
+                <p>Manage Posts</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

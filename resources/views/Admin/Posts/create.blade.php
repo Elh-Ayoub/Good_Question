@@ -125,12 +125,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create user</h1>
+            <h1>Create Post</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create user</li>
+              <li class="breadcrumb-item active">Create Post</li>
             </ol>
           </div>
         </div>
@@ -139,7 +139,7 @@
 
     <!-- Main content -->
     <section class="content">
-      <form method="POST" action="{{route('create.user')}}" class="card p-3" enctype="multipart/form-data">
+      <form method="POST" action="{{route('posts.create')}}" class="card p-3" enctype="multipart/form-data">
         <div class="d-flex align-items-stretch flex-row">
         <div class="col-md-6">
           <div class="card card-primary p-2">
@@ -171,36 +171,23 @@
                 </div>
             @endif
               <div class="form-group">
-                <label for="login">Login</label>
-                <input type="text" id="login" name="login" class="form-control" maxlength="20">
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" class="form-control" maxlength="20">
               </div>
               <div class="form-group">
-                <label for="full_name">Full name</label>
-                <input type="text" id="full_name" name="full_name" class="form-control" maxlength="30">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" maxlength="100">
               </div>
               <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control" maxlength="30">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" class="form-control" maxlength="500"></textarea>
               </div>
               <div class="form-group">
-                <label for="role">Role</label>
-                <select id="role" name="role" class="form-control custom-select">
-                  <option selected disabled>Select one</option>
-                  <option>user</option>
-                  <option>admin</option>
-                </select>
-              </div>
+                <label for="categories">Categories</label>
+                <input type="text" id="categories" name="categories" class="form-control" maxlength="500">
               <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="password_confirmation">Confirme password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="profile_photo">Profile picture</label>
-                <input type="file" id="profile_photo" name="profile_photo" class="form-control">
+                <label for="images">Add a picture</label>
+                <input type="file" id="images" name="images" class="form-control" multiple>
               </div>
             </div>
             <!-- /.card-body -->

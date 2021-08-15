@@ -116,21 +116,15 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{route('users.list')}}" class="nav-link">
                 <i class="fa fa-briefcase"></i>
                 <p>Manage Users</p>
               </a>
           </li>
           <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="fa fa-bookmark"></i>
-                <p>Orders</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="" class="nav-link">
-                <i class="fa  fa-binoculars"></i>
-                <p>Track my Order</p>
+              <a href="{{route('posts.list')}}" class="nav-link">
+                <i class="fa fa-book"></i>
+                <p>Manage Posts</p>
               </a>
           </li>
         </ul>
