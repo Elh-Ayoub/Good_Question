@@ -184,10 +184,11 @@
               </div>
               <div class="form-group">
                 <label for="categories">Categories</label>
+                <div id="res"></div>
                 <input type="text" id="categories" name="categories" class="form-control" maxlength="500">
               <div class="form-group">
                 <label for="images">Add a picture</label>
-                <input type="file" id="images" name="images" class="form-control" multiple>
+                <input type="file" id="images" name="images[]" class="form-control" multiple>
               </div>
             </div>
             <!-- /.card-body -->
@@ -229,5 +230,17 @@
 <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
+<script>
+  $('#categories').keyup(function(){
+    current = $(this).val();
+    var arr = current.split(' ');
+    res = "";
+    arr.forEach(function(a){
+      if(a != "")
+      res += "<span class='alert-primary col-sm-2 m-2' role='alert' style='border-radius:5px'>" + a + "</span>";
+    })
+    $("#res").html(res)
+  })
+</script>
 </body>
 </html>

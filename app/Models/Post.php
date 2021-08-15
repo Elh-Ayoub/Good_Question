@@ -18,7 +18,8 @@ class Post extends Model
         'publish_date',
         'status',
         'content',
-        'categories'
+        'categories',
+        'images',
     ];
 
     protected $casts = [

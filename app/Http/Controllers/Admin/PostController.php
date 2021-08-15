@@ -21,11 +21,14 @@ class PostController extends Controller
             if($validator->fails()){
                 return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
             }
+            
+            $images = $this->uploadMultiImages($request);
             $post = Post::create([
                 'author' => $request->input('author'),
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
-                'categories' => $request->input('categories')
+                'categories' => $request->input('categories'),
+                'images' => $images,
             ]);
             // $categories = $this->StringToArr($request->input('categories'));
             // foreach($categories as $cat){
@@ -48,8 +51,32 @@ class PostController extends Controller
         $data = [];
         $posts = Post::all();
         foreach($posts as $post){
-            array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first()]);
+            array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first(), 'images' => explode(" ", $post->images)]);
         }
         return view('Admin.Posts.list', ['data' => $data]);
+    }
+    function uploadMultiImages($request){
+        $images = $request->file('images');
+        if(!$images){
+            return null;
+        }
+        $i = 2;
+        $result = "";
+        foreach($images as $image){
+            if($image){
+                $filename = str_replace(' ', '-', "post". '-' . $request->input('author') . "-" . $i). '.png';
+                $j=2;
+                while(file_exists(public_path('/posts-images/' .$filename))){
+                    $filename  = str_replace(' ', '-', "post". '-' . $request->input('author')). $j . "-" . $i . '.png';
+                    $j++;
+                }
+                $image->store('public');
+                $image->move(public_path('/posts-images'), $filename);
+                $result .= url('/posts-images/' . $filename) . " ";
+            }
+            $i++;
+        }
+        return $result;
+        
     }
 }

@@ -2,20 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Contacts</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
+  <title>Create User - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('css/auth.css')}}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
   <!-- Navbar -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="{{asset('images/Logo.png')}}" alt="AdminLTELogo" height="60" width="60">
+    </div>
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -23,7 +29,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{route('admin.dashboard')}}" class="nav-link">Home</a>
+        <a href="index3.html" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
@@ -32,7 +38,7 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      @if(!Auth::user())
+    @if(!Auth::user())
       <li class="nav-item">
         <a class="nav-link" href="{{route('login')}}">Login</a>
       </li>
@@ -56,15 +62,14 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{route('admin.dashboard')}}" class="brand-link">
-      <img src="{{asset('images/Logo.png')}}" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
+    <a href="" class="brand-link">
+      <img src="{{asset('images/Logo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">GoodQuestion</span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user (optional) -->
-      @if(Auth::user())
+      <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img src="{{Auth::user()->profile_photo}}" class="img-circle elevation-2" alt="User-Image">
@@ -73,7 +78,6 @@
           <a href="{{route('admin.profile')}}" class="d-block">{{Auth::user()->login}}</a>
         </div>
       </div>
-      @endif
 
       <!-- SidebarSearch Form -->
       <div class="form-inline">
@@ -87,8 +91,8 @@
         </div>
       </div>
 
-     <!-- Sidebar Menu -->
-     <nav class="mt-2">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
               <a href="{{route('admin.dashboard')}}" class="nav-link">
@@ -97,13 +101,13 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link">
+              <a href="{{route('users.list')}}" class="nav-link active">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link active">
+              <a href="{{route('posts.list')}}" class="nav-link">
                 <i class="fa fa-book"></i>
                 <p>Manage Posts</p>
               </a>
@@ -114,7 +118,6 @@
     </div>
     <!-- /.sidebar -->
   </aside>
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -122,86 +125,82 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Contacts</h1>
+            <h1>Create Post</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Contacts</li>
+              <li class="breadcrumb-item active">Create Post</li>
             </ol>
           </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
-    <a href="{{route('posts.create.view')}}" class="btn btn-primary m-2"><i class="fas fa-plus mr-2"></i>Create post</a>
+
     <!-- Main content -->
     <section class="content">
-
-      <!-- Default box -->
-      <div class="card card-solid">
-        <div class="card-body pb-0">
-          <div class="row">
-            @foreach($data as $d)
-            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
-              <div class="card bg-light d-flex flex-fill">
-                <div class="text-muted border-bottom-0 row justify-content-between">
-                    <h2 class="lead pt-4 pl-4"><b>{{$d['post']->author}}</b></h2>
-                    @if($d['post']->status == "active")
-                    <span class="lead pt-3 pr-4 text-success">{{$d['post']->status}}</span>
-                    @else
-                    <span class="lead pt-3 pr-4 text-danger">{{$d['post']->status}}</span>
-                    @endif
-                </div>
-                <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-5">
-                      <img src="{{$d['author']->profile_photo}}" alt="user-avatar" class="img-circle img-fluid img-md">
-                    </div>
-                    <div class="col-7">
-                      <h2 class="lead"><b>{{$d['post']->title}}</b></h2>
-                      <p class="text-muted text-sm">{{$d['post']->content}}</p>
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> {{$d['post']->categories}}</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-clock"></i></span> {{$d['post']->created_at}}</li>
-                      </ul>
-                    </div> 
-                    @if($d['images'] != [""])
-                        <div class="row justify-content-around">        
-                            <div class="col-12 text-center">
-                                <img src="{{$d['images'][0]}}" alt="product-avatar" class="img-fluid" style="width:1280px;">
-                            </div>
-                        @for ($i = 1; $i < count($d['images']); $i++)
-                            <div class="d-flex">
-                            @if($d['images'][$i] || $d['images'][$i] != '')
-                                <div class="product-image-thumb"><img class="img-fluid" src="{{$d['images'][$i]}}" alt="Post Image"></div>
-                            @endif
-                            </div>
-                        @endfor
-                        </div>
-                      @endif              
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal mr-2">
-                      <i class="fas fa-pen"></i>Edit
-                    </a>
-                    <a href="#" class="btn btn-sm btn-danger">
-                      <i class="fas fa-times"></i> Delete
-                    </a>
-                  </div>
-                </div>
+      <form method="POST" action="{{route('posts.create')}}" class="card p-3" enctype="multipart/form-data">
+        <div class="d-flex align-items-stretch flex-row">
+        <div class="col-md-6">
+          <div class="card card-primary p-2">
+          @csrf
+            <div class="card-header">
+              <h3 class="card-title">General</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
               </div>
             </div>
-            @endforeach
+            <div class="card-body">
+            @if(Session::get('success'))
+                <div class="form-group">
+                    <p class="success">{{Session::get('success')}}</p>
+                </div>
+            @endif
+            @if(Session::get('fail'))
+                <div class="form-group">
+                    <p class="fail">{{Session::get('fail')}}</p>
+                </div>
+            @endif
+            @if(Session::get('fail-arr'))
+                <div class="input-field">
+                    @foreach(Session::get('fail-arr') as $key => $err)
+                    <p class="fail">{{$key . ': ' . $err[0]}}</p>
+                    @endforeach
+                </div>
+            @endif
+              <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" class="form-control" maxlength="20">
+              </div>
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" maxlength="100">
+              </div>
+              <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" class="form-control" maxlength="500"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="categories">Categories</label>
+                <input type="text" id="categories" name="categories" class="form-control" maxlength="500">
+              <div class="form-group">
+                <label for="images">Add a picture</label>
+                <input type="file" id="images" name="images" class="form-control" multiple>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="col-12">
+              <a href="{{route('admin.dashboard')}}" class="btn btn-secondary">Cancel</a>
+              <input type="submit" value="Create" class="btn btn-success float-right">
+            </div>
           </div>
+          <!-- /.card -->
         </div>
-        <!-- /.card-body -->
-
-        <!-- /.card-footer -->
-      </div>
-      <!-- /.card -->
-
+        </div>
+        
+      </form>
     </section>
     <!-- /.content -->
   </div>
