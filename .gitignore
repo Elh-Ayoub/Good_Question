@@ -4,6 +4,7 @@
 /public/plugins
 /public/public
 /public/profile-pictures
+/public/posts-images
 /public/storage
 /storage/*.key
 /vendor
