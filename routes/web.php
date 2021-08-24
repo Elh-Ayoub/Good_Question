@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 /*
@@ -71,20 +72,21 @@ Route::group([
     Route::get('/home', function () {
         $users = count(User::where('role', 'user')->get());
         $admins = count(User::where('role', 'admin')->get());
-        return view('Admin.home', ['users' => $users, 'admins' => $admins]);
+        $posts = count(Post::all());
+        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts]);
     })->name('admin.dashboard');
-    Route::get('create/user', function(){
+    Route::get('user/create', function(){
         return view('Admin.Users.create');
     })->name('create.user.view');
-    Route::post('create/user', [UserController::class, 'create'])->name('create.user');
-    Route::patch('/update/profile', [UserController::class, 'UpdateAdmin'])->name('admin.update');
-    Route::patch('/update/password', [UserController::class, 'UpdateAdminPassword'])->name('admin.password');
-    Route::patch('update/avatar', [UserController::class, 'UpdateAvatar'])->name('admin.update.avatar');
-    Route::delete('delete/avatar', [UserController::class, 'setDefaultAvatar'])->name('admin.delete.avatar');
+    Route::post('user/create', [UserController::class, 'create'])->name('create.user');
+    Route::patch('profile/update/', [UserController::class, 'UpdateAdmin'])->name('admin.update');
+    Route::patch('password/update/', [UserController::class, 'UpdateAdminPassword'])->name('admin.password');
+    Route::patch('avatar/update', [UserController::class, 'UpdateAvatar'])->name('admin.update.avatar');
+    Route::delete('avatar/delete', [UserController::class, 'setDefaultAvatar'])->name('admin.delete.avatar');
     Route::get('/users', function(){return view('Admin.Users.list', ['users' => User::all()]);})->name('users.list');
-    Route::get('update/users',function(Request $request){return view('Admin.Users.profile', ['user' => User::find($request->user)]);})->name('users.update.view');
-    Route::patch('update/users',[UserController::class, 'updateProfiles'])->name('users.update');
-    Route::delete('delete/users',[UserController::class, 'deleteProfiles'])->name('users.delete');
+    Route::get('users/update',function(Request $request){$user = User::find($request->user);return view('Admin.Users.profile', ['user' => $user, 'posts' => Post::where('author', $user->login)->get()]);})->name('users.update.view');
+    Route::patch('users/update',[UserController::class, 'updateProfiles'])->name('users.update');
+    Route::delete('users/delete',[UserController::class, 'deleteProfiles'])->name('users.delete');
 });
  //////////////////// ----------Posts module----------  ////////////////////
  Route::group([
@@ -92,7 +94,9 @@ Route::group([
     'prefix' => 'admin',
 ], function () {
     Route::get('/posts', [PostController::class, 'Postlist'])->name('posts.list');
-    Route::get('create/posts', function(){return view('Admin.Posts.create');})->name('posts.create.view');
-    Route::post('create/posts', [PostController::class, 'create'])->name('posts.create');
-
+    Route::get('posts/create', function(){return view('Admin.Posts.create');})->name('posts.create.view');
+    Route::post('posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::get('posts/update/{id}', function($id){return view('Admin.Posts.edit', ['post' => Post::find($id)]);})->name('posts.update.view');
+    Route::patch('posts/update', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('posts/delete/{id}', [PostController::class, 'destroy'])->name('posts.delete');
 });

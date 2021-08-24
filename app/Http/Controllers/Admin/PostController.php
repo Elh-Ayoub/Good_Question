@@ -16,30 +16,21 @@ class PostController extends Controller
                 'author' => ['required', 'string', 'max:30'],
                 'title' => ['required', 'string', 'max:100'],
                 'content' => ['required', 'string', 'max:500'],
-                'categories' => ['required', 'string', 'max:255'],
+                'categories' => ['required', 'max:255'],
             ]);
             if($validator->fails()){
                 return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
             }
-            
+            $categories = implode(", ", $request->categories);
             $images = $this->uploadMultiImages($request);
             $post = Post::create([
                 'author' => $request->input('author'),
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
-                'categories' => $request->input('categories'),
+                'categories' => $categories,
                 'images' => $images,
             ]);
-            // $categories = $this->StringToArr($request->input('categories'));
-            // foreach($categories as $cat){
-            //     $categorie = DB::table('categories')
-            //     ->select('id' ,'title')->where('title', $cat)
-            //     ->get();
-            //     $categorie = json_decode($categorie, true);
-            //     if(count($categorie) === 0){
-            //         Categorie::create(['title' => $cat]);
-            //     }          
-            // }
+            
             if($post){
                 return back()->with('success', 'Post created successfully!');
             }else{
@@ -78,5 +69,28 @@ class PostController extends Controller
         }
         return $result;
         
+    }
+    public function update(Request $request){
+        $validator = Validator::make($request->all(), [
+            'author' => ['required', 'string', 'max:30'],
+            'title' => ['required', 'string', 'max:100'],
+            'content' => ['required', 'string', 'max:500'],
+            'categories' => ['max:255'],
+        ]);
+        if($validator->fails()){
+            return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
+        }
+        $post = Post::find($request->post);
+        $categories = $post->categories;
+        if($request->categories){
+            $categories = implode(", ", $request->categories);
+        }
+        $images = $this->uploadMultiImages($request);
+        $post->update(array_merge($request->all(), ['images' => $images, 'categories' => $categories]));
+        return redirect('admin/posts/update/' . $post->id)->with('success', 'Post updated successfully!');
+    }
+    public function destroy($id){
+        Post::destroy($id);
+        return redirect('admin/posts')->with('success', 'Post deleted successfully!');
     }
 }

@@ -5,7 +5,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <title>Create User - {{env('APP_NAME')}}</title>
+  <title>Create Post - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,6 +14,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{ asset('css/auth.css')}}">
+  <link rel="stylesheet" href="{{ asset('css/chip.css')}}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -101,13 +102,13 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link">
+              <a href="{{route('posts.list')}}" class="nav-link active">
                 <i class="fa fa-book"></i>
                 <p>Manage Posts</p>
               </a>
@@ -185,9 +186,9 @@
               <div class="form-group">
                 <label for="categories">Categories</label>
                 <div id="res"></div>
-                <input type="text" id="categories" name="categories" class="form-control" maxlength="500">
+                <input type="text" id="categories" class="form-control" maxlength="500">
               <div class="form-group">
-                <label for="images">Add a picture</label>
+                <label for="images">Add a picture(s)</label>
                 <input type="file" id="images" name="images[]" class="form-control" multiple>
               </div>
             </div>
@@ -230,17 +231,6 @@
 <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
-<script>
-  $('#categories').keyup(function(){
-    current = $(this).val();
-    var arr = current.split(' ');
-    res = "";
-    arr.forEach(function(a){
-      if(a != "")
-      res += "<span class='alert-primary col-sm-2 m-2' role='alert' style='border-radius:5px'>" + a + "</span>";
-    })
-    $("#res").html(res)
-  })
-</script>
+<script src="{{asset('js/chip.js')}}"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <title>Create User - {{env('APP_NAME')}}</title>
+  <title>Update Post - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,6 +14,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{ asset('css/auth.css')}}">
+  <link rel="stylesheet" href="{{ asset('css/chip.css')}}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -101,13 +102,13 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link">
+              <a href="{{route('posts.list')}}" class="nav-link active">
                 <i class="fa fa-book"></i>
                 <p>Manage Posts</p>
               </a>
@@ -125,7 +126,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Post</h1>
+            <h1>Update Post</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -139,11 +140,12 @@
 
     <!-- Main content -->
     <section class="content">
-      <form method="POST" action="{{route('posts.create')}}" class="card p-3" enctype="multipart/form-data">
+      <form method="POST" action="{{route('posts.update', ['post' => $post->id])}}" class="card p-3" enctype="multipart/form-data">
         <div class="d-flex align-items-stretch flex-row">
         <div class="col-md-6">
           <div class="card card-primary p-2">
           @csrf
+          @method('PATCH')
             <div class="card-header">
               <h3 class="card-title">General</h3>
               <div class="card-tools">
@@ -172,28 +174,37 @@
             @endif
               <div class="form-group">
                 <label for="author">Author</label>
-                <input type="text" id="author" name="author" class="form-control" maxlength="20">
+                <input type="text" id="author" name="author" class="form-control" maxlength="20" value="{{$post->author}}">
               </div>
               <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title" class="form-control" maxlength="100">
+                <input type="text" id="title" name="title" class="form-control" maxlength="100" value="{{$post->title}}">
               </div>
               <div class="form-group">
                 <label for="content">Content</label>
-                <textarea id="content" name="content" class="form-control" maxlength="500"></textarea>
+                <textarea id="content" name="content" class="form-control" maxlength="500">{{$post->content}}</textarea>
               </div>
               <div class="form-group">
                 <label for="categories">Categories</label>
-                <input type="text" id="categories" name="categories" class="form-control" maxlength="500">
+                <div id="res"></div>
+                <input type="text" id="categories" class="form-control" maxlength="500" value="{{implode(' ', explode(', ',$post->categories))}}">
+              </div>
               <div class="form-group">
-                <label for="images">Add a picture</label>
+                <label for="status">Post's status</label>
+                <select id="status" name="status" class="form-control custom-select">
+                  <option selected disabled>{{$post->status}}</option>
+                  <option>active</option>
+                  <option>inactive</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="images">Add a picture(s)</label>
                 <input type="file" id="images" name="images" class="form-control" multiple>
               </div>
-            </div>
             <!-- /.card-body -->
             <div class="col-12">
               <a href="{{route('admin.dashboard')}}" class="btn btn-secondary">Cancel</a>
-              <input type="submit" value="Create" class="btn btn-success float-right">
+              <input type="submit" value="Update" class="btn btn-success float-right">
             </div>
           </div>
           <!-- /.card -->
@@ -229,5 +240,6 @@
 <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
+<script src="{{ asset('js/chip.js') }}"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Contacts</title>
+  <title>Posts - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/auth.css')}}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -122,7 +123,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Contacts</h1>
+            <h1>Posts</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -133,10 +134,26 @@
         </div>
       </div><!-- /.container-fluid -->
     </section>
+    @if(Session::get('success'))
+      <div class="form-group">
+        <p class="success">{{Session::get('success')}}</p>
+      </div>
+    @endif
+    @if(Session::get('fail'))
+      <div class="form-group">
+        <p class="fail">{{Session::get('fail')}}</p>
+      </div>
+    @endif
+    @if(Session::get('fail-arr'))
+      <div class="input-field">
+        @foreach(Session::get('fail-arr') as $key => $err)
+          <p class="fail">{{$key . ': ' . $err[0]}}</p>
+        @endforeach
+      </div>
+    @endif
     <a href="{{route('posts.create.view')}}" class="btn btn-primary m-2"><i class="fas fa-plus mr-2"></i>Create post</a>
     <!-- Main content -->
     <section class="content">
-
       <!-- Default box -->
       <div class="card card-solid">
         <div class="card-body pb-0">
@@ -144,52 +161,84 @@
             @foreach($data as $d)
             <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
               <div class="card bg-light d-flex flex-fill">
-                <div class="text-muted border-bottom-0 row justify-content-between">
-                    <h2 class="lead pt-4 pl-4"><b>{{$d['post']->author}}</b></h2>
-                    @if($d['post']->status == "active")
-                    <span class="lead pt-3 pr-4 text-success">{{$d['post']->status}}</span>
-                    @else
-                    <span class="lead pt-3 pr-4 text-danger">{{$d['post']->status}}</span>
-                    @endif
-                </div>
                 <div class="card-body pt-0">
-                  <div class="row">
-                    <div class="col-5">
-                      <img src="{{$d['author']->profile_photo}}" alt="user-avatar" class="img-circle img-fluid img-md">
-                    </div>
-                    <div class="col-7">
-                      <h2 class="lead"><b>{{$d['post']->title}}</b></h2>
-                      <p class="text-muted text-sm">{{$d['post']->content}}</p>
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> {{$d['post']->categories}}</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-clock"></i></span> {{$d['post']->created_at}}</li>
-                      </ul>
-                    </div> 
-                    @if($d['images'] != [""])
-                        <div class="row justify-content-around">        
-                            <div class="col-12 text-center">
-                                <img src="{{$d['images'][0]}}" alt="product-avatar" class="img-fluid" style="width:1280px;">
+                <div class="post">
+                      <div class="user-block mt-3">
+                        <img class="img-circle img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
+                        <span class="username">
+                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['post']->author}}</a>
+                          @if($d['post']->status == "active")
+                          <span class="float-right btn-tool text-success">{{$d['post']->status}}</span>
+                          @else
+                          <span class="float-right btn-tool text-danger">{{$d['post']->status}}</span>
+                          @endif
+                        </span>
+                        <span class="description">Shared publicly - {{$d['post']->created_at}}</span>
+                      </div>
+                      <!-- /.user-block -->
+                      <p>
+                      {{$d['post']->content}}
+                      </p>
+                      <div class="col-lg-10">
+                        <div class="row">
+                      @if($d['post']->images)
+                        @foreach($d['images'] as $img)
+                          @if($img != "")
+                            <div class="col-lg-6">
+                              <img class="img-fluid mb-3" src="{{$img}}" alt="Photo">
                             </div>
-                        @for ($i = 1; $i < count($d['images']); $i++)
-                            <div class="d-flex">
-                            @if($d['images'][$i] || $d['images'][$i] != '')
-                                <div class="product-image-thumb"><img class="img-fluid" src="{{$d['images'][$i]}}" alt="Post Image"></div>
-                            @endif
-                            </div>
-                        @endfor
+                          @endif
+                        @endforeach            
+                      @endif 
                         </div>
-                      @endif              
-                  </div>
+                      </div>
+                      <p>
+                        <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
+                        <a href="#" class="link-black text-sm ml-2"><i class="far fa-thumbs-down"></i> Dislike</a>
+                        <span class="float-right">
+                          <a href="#" class="link-black text-sm">
+                            <i class="far fa-comments mr-1"></i> Comments (5)
+                          </a>
+                        </span>
+                      </p>
+
+                      <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
+                    </div>
                 </div>
                 <div class="card-footer">
                   <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal mr-2">
+                    <a href="{{route('posts.update.view', $d['post']->id)}}" class="btn btn-sm bg-teal mr-2">
                       <i class="fas fa-pen"></i>Edit
                     </a>
-                    <a href="#" class="btn btn-sm btn-danger">
+                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-danger-{{$d['post']->id}}">
                       <i class="fas fa-times"></i> Delete
-                    </a>
+                    </button>
                   </div>
+                </div>
+                <div class="modal fade" id="modal-danger-{{$d['post']->id}}">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-danger">
+                      <div class="modal-header">
+                        <h4 class="modal-title">Confirmation</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>You are about to delete a post. Are you sure? </p>
+                      </div>
+                      <form action="{{route('posts.delete', $d['post']->id)}}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-outline-light">Delete</button>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
                 </div>
               </div>
             </div>

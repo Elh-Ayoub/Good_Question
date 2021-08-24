@@ -201,7 +201,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>22</h3>
+                <h3>{{$posts}}</h3>
 
                 <p>Posts</p>
               </div>
