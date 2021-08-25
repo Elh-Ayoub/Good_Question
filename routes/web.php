@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 /*
@@ -73,7 +75,8 @@ Route::group([
         $users = count(User::where('role', 'user')->get());
         $admins = count(User::where('role', 'admin')->get());
         $posts = count(Post::all());
-        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts]);
+        $categories = count(Category::all());
+        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts, 'categories' => $categories]);
     })->name('admin.dashboard');
     Route::get('user/create', function(){
         return view('Admin.Users.create');
@@ -99,4 +102,15 @@ Route::group([
     Route::get('posts/update/{id}', function($id){return view('Admin.Posts.edit', ['post' => Post::find($id)]);})->name('posts.update.view');
     Route::patch('posts/update', [PostController::class, 'update'])->name('posts.update');
     Route::delete('posts/delete/{id}', [PostController::class, 'destroy'])->name('posts.delete');
+});
+ //////////////////// ----------Posts module----------  ////////////////////
+ Route::group([
+    'middleware' => 'AuthCheck',
+    'prefix' => 'admin',
+], function () {
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.list');
+    Route::post('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::patch('categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
+
 });

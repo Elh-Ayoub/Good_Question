@@ -127,6 +127,12 @@
                 <p>Manage Posts</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('categories.list')}}" class="nav-link">
+                <i class="fas fa fa-list-alt"></i>
+                <p>Manage Categories</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -206,9 +212,23 @@
                 <p>Posts</p>
               </div>
               <div class="icon">
-                <i class="fas fa-address-card"></i>
+                <i class="fa fa-book"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{route('posts.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{$categories}}</h3>
+
+                <p>Categories</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa fa-list-alt"></i>
+              </div>
+              <a href="{{route('categories.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           </div>

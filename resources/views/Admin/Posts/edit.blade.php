@@ -113,6 +113,12 @@
                 <p>Manage Posts</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('categories.list')}}" class="nav-link">
+                <i class="fas fa fa-list-alt"></i>
+                <p>Manage Categories</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -179,10 +185,6 @@
               <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" class="form-control" maxlength="100" value="{{$post->title}}">
-              </div>
-              <div class="form-group">
-                <label for="content">Content</label>
-                <textarea id="content" name="content" class="form-control" maxlength="500">{{$post->content}}</textarea>
               </div>
               <div class="form-group">
                 <label for="categories">Categories</label>

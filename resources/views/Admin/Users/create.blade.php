@@ -112,6 +112,12 @@
                 <p>Manage Posts</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('categories.list')}}" class="nav-link">
+                <i class="fas fa fa-list-alt"></i>
+                <p>Manage Categories</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

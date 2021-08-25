@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
@@ -20,6 +21,14 @@ class PostController extends Controller
             ]);
             if($validator->fails()){
                 return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
+            }
+            foreach($request->categories as $category){
+                $cat = Category::where('title', $category)->first();
+                if(!$cat){
+                    Category::create([
+                        'title' => $category
+                    ]);
+                }
             }
             $categories = implode(", ", $request->categories);
             $images = $this->uploadMultiImages($request);
@@ -74,7 +83,6 @@ class PostController extends Controller
         $validator = Validator::make($request->all(), [
             'author' => ['required', 'string', 'max:30'],
             'title' => ['required', 'string', 'max:100'],
-            'content' => ['required', 'string', 'max:500'],
             'categories' => ['max:255'],
         ]);
         if($validator->fails()){

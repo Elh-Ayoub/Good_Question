@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin | {{env('APP_NAME')}}</title>
+  <title>Categories | {{env('APP_NAME')}}</title>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -25,8 +25,8 @@
   <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css')}}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <style>.title, .table-row{cursor: pointer;}</style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -97,7 +97,7 @@
       @endif
       <!-- SidebarSearch Form -->
       <div class="form-inline mt-4">
-        <div class="input-group">
+        <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
             <button class="btn btn-sidebar">
@@ -117,7 +117,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
@@ -129,7 +129,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('categories.list')}}" class="nav-link">
+              <a href="{{route('categories.list')}}" class="nav-link active">
                 <i class="fas fa fa-list-alt"></i>
                 <p>Manage Categories</p>
               </a>
@@ -148,7 +148,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Home</h1>
+            <h1 class="m-0">List of categories</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -161,37 +161,11 @@
     <!-- /.content-header -->
     </section>
     <!-- Main content -->
-    @if(Session::get('success'))
-      <div class="alert alert-success col-sm-3" role="alert">
-        {{Session::get('success')}}
-      </div>
-    @endif
-    @if(Session::get('fail'))
-      <div class="alert alert-danger col-sm-3" role="alert">
-        {{Session::get('fail')}}
-      </div>
-    @endif
-    @if(Session::get('fail-arr'))
-      <div class="alert alert-danger col-sm-3" role="alert">
-        @foreach(Session::get('fail-arr') as $key => $err)
-          <p>{{$key . ': ' . $err[0]}}</p>
-        @endforeach
-      </div>
-    @endif
-    <p id="result"></p>
     <section class="content">
-    <div class="form-inline justify-content-between mb-2">
-        <a href="{{route('create.user.view')}}" class="btn btn-primary col-sm-2"><i class="fas fa-plus"></i> Create new User/Admin</a>
-        <div class="input-group mb-1">
-          <input type="text" id="searchByLogin" type="search" placeholder="Search by login...">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-               <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-        </div>
-        <div class="input-group mb-1">
-          <input type="text" id="searchByemail" type="search" placeholder="Search by email...">
+    <div class="form-inline">
+        <button type="button" class="btn btn-primary mb-2 mr-3" data-toggle="modal" data-target="#modal-default"><i class="fas fa-plus mr-2"></i>Create category</button>
+        <div class="input-group mb-2" data-widget="sidebar-search">
+          <input type="text" id="myInput" onkeyup="searchbyName()" type="search" placeholder="Search...">
             <div class="input-group-append">
               <button class="btn btn-sidebar">
                <i class="fas fa-search fa-fw"></i>
@@ -199,43 +173,142 @@
             </div>
         </div>
     </div>
+    @if(Session::get('success'))
+        <div class="form-group">
+            <p class="success">{{Session::get('success')}}</p>
+        </div>
+    @endif
+    @if(Session::get('fail'))
+        <div class="form-group">
+            <p class="fail">{{Session::get('fail')}}</p>
+        </div>
+    @endif
+    @if(Session::get('fail-arr'))
+        <div class="input-field">
+            @foreach(Session::get('fail-arr') as $key => $err)
+                <p class="fail">{{$key . ': ' . $err[0]}}</p>
+            @endforeach
+        </div>
+    @endif
+    
     <div class="card card-solid">
         <div class="card-body pb-0">
-          <div class="row">
-            <table class="table text-center orders table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>#</th>
-                        <th><i class="fas fa-sort"></i><span class="title">Login</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Email</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Full name</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Role</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Rating</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Created at</span></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($users as $user)
-                    <tr class="table-row" data-id="{{$user->id}}">
-                        <td><img class="img-size-64" src="{{$user->profile_photo}}" alt="Avatar"></td>
-                        <td class="login">{{$user->login}}</td>
-                        <td class="email">{{$user->email}}</td>
-                        <td class="full_name">{{$user->full_name}}</td>
-                        <td>{{$user->role}}</td>
-                        <td>{{$user->rating}}</td>
-                        <td class="created_at">{{$user->created_at}}</td>
-                        <td><a href="{{route('users.update.view', ['user' => $user->id])}}" type="button" class="btn btn-warning">Edit or Delete</a></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+          <div class="row justify-content-start">
+              @foreach($categories as $category)
+                <div class="col-lg-3 col-6 d-flex align-items-stretch flex-column">
+                    <!-- small box -->
+                    <div class="small-box categories flex-fill" id="{{str_replace(' ', '-', $category->title)}}">
+                        <div class="inner">
+                            <h3 class="title">{{$category->title}}</h3>
+                            @if($category->description)
+                            <p>{{$category->description}}</p>
+                            @else
+                            <p>No description</p>
+                            @endif
+                        </div>
+                        <div class="icon">
+                            <i class="fab fa-{{strtolower($category->title)}}"></i>
+                        </div>
+                        <a href="#" type="button" class="small-box-footer" data-toggle="modal" data-target="#modal-default-{{$category->id}}">Edit or Delete <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="modal fade" id="modal-default-{{$category->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Category</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{{route('categories.update', $category->id)}}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="title">Title</label>
+                                        <input type="text" id="title" name="title" class="form-control" maxlength="100" value="{{$category->title}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea id="description" name="description" class="form-control" maxlength="200">{{$category->description}}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$category->id}}">Delete</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <div class="modal fade" id="modal-delete-{{$category->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-danger">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirmation</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{{route('categories.delete', $category->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <div class="modal-body">
+                                    <p>You are about to delete a category. Are you sure?</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-outline-light">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+            @endforeach
           </div>
         </div>
-      </div>
+    </div>
+    
         <!-- /.card-body -->
         <!-- <div id="loadmore" class="alert alert-info alert-dismissible text-center" style="cursor: pointer;"><i class="fas fa-caret-down"></i> Load More</div> -->
         <!-- /.card-footer -->
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Create Category</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{route('categories.create')}}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" id="title" name="title" class="form-control" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control" maxlength="200"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
       </div>
     </section>
     <!-- /.content -->
@@ -295,14 +368,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/lazyLoading.js')}}"></script>
 <script src="{{ asset('js/search.js')}}"></script>
-<script src="{{ asset('js/sortTable.js')}}"></script>
 <script src="{{ asset('plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
 <script src="{{ asset('plugins/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
-<script>
-   $('.table-row').on('click', function(){
-      id = $(this).data('id');
-      window.location = "{{route('users.update.view')}}" + "?user="+id
-   })
-</script>
+<script src="{{ asset('js/categories.js')}}"></script>
 </body>
 </html>

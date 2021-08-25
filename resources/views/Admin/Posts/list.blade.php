@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
   <title>Posts - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -107,6 +109,12 @@
               <a href="{{route('posts.list')}}" class="nav-link active">
                 <i class="fa fa-book"></i>
                 <p>Manage Posts</p>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a href="{{route('categories.list')}}" class="nav-link">
+                <i class="fas fa fa-list-alt"></i>
+                <p>Manage Categories</p>
               </a>
           </li>
         </ul>
