@@ -133,6 +133,12 @@
                 <p>Manage Categories</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('comments.list')}}" class="nav-link">
+                <i class="far fa-comment"></i>
+                <p>Manage Comments</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -229,6 +235,20 @@
                 <i class="fas fa fa-list-alt"></i>
               </div>
               <a href="{{route('categories.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-secondary">
+              <div class="inner">
+                <h3>{{$comments}}</h3>
+
+                <p>Comments</p>
+              </div>
+              <div class="icon">
+                <i class="far fa-comments"></i>
+              </div>
+              <a href="{{route('comments.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           </div>

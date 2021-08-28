@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 /*
@@ -77,7 +78,8 @@ Route::group([
         $admins = count(User::where('role', 'admin')->get());
         $posts = count(Post::all());
         $categories = count(Category::all());
-        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts, 'categories' => $categories]);
+        $comments = count(Comment::all());
+        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts, 'categories' => $categories, 'comments' => $comments]);
     })->name('admin.dashboard');
     Route::get('user/create', function(){
         return view('Admin.Users.create');
