@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
@@ -51,7 +52,10 @@ class PostController extends Controller
         $data = [];
         $posts = Post::all();
         foreach($posts as $post){
-            array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first(), 'images' => explode(" ", $post->images)]);
+            $comments = Comment::where('post_id', $post->id)->get();
+            array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first(),
+                 'images' => explode(" ", $post->images), 'comments' => $comments,
+            ]);
         }
         return view('Admin.Posts.list', ['data' => $data]);
     }

@@ -5,7 +5,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <title>Posts - {{env('APP_NAME')}}</title>
+  <title>Comments - {{env('APP_NAME')}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -110,7 +110,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link active">
+              <a href="{{route('posts.list')}}" class="nav-link">
                 <i class="fa fa-book"></i>
                 <p>Manage Posts</p>
               </a>
@@ -122,7 +122,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('comments.list')}}" class="nav-link">
+              <a href="{{route('comments.list')}}" class="nav-link active">
                 <i class="far fa-comment"></i>
                 <p>Manage Comments</p>
               </a>
@@ -141,12 +141,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Posts</h1>
+            <h1>Comments</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Contacts</li>
+              <li class="breadcrumb-item active">Comments</li>
             </ol>
           </div>
         </div>
@@ -169,7 +169,6 @@
         @endforeach
       </div>
     @endif
-    <a href="{{route('posts.create.view')}}" class="btn btn-primary m-2"><i class="fas fa-plus mr-2"></i>Create post</a>
     <!-- Main content -->
     <section class="content">
       <!-- Default box -->
@@ -177,152 +176,44 @@
         <div class="card-body pb-0">
           <div class="row">
             @foreach($data as $d)
-            <div class="col-12  col-md-6 d-flex align-items-stretch flex-column">
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
               <div class="card bg-light d-flex flex-fill">
                 <div class="card-body pt-0">
                 <div class="post">
-                  <form action="{{route('comments.create' , ['post_id' => $d['post']->id])}}" method="POST">   
-                    @csrf
                       <div class="user-block mt-3">
                         <img class="img-circle img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
                         <span class="username">
-                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['post']->author}}</a>
-                          @if($d['post']->status == "active")
-                          <span class="float-right btn-tool text-success">{{$d['post']->status}}</span>
+                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['comment']->author}}</a>
+                          @if($d['comment']->status == "active")
+                          <span class="float-right btn-tool text-success">{{$d['comment']->status}}</span>
                           @else
-                          <span class="float-right btn-tool text-danger">{{$d['post']->status}}</span>
+                          <span class="float-right btn-tool text-danger">{{$d['comment']->status}}</span>
                           @endif
                         </span>
-                        <span class="description">Shared publicly - {{$d['post']->created_at}}</span>
+                        <span class="description">Shared publicly - {{$d['comment']->created_at}}</span>
                       </div>
                       <!-- /.user-block -->
-                      <p class="text-center lead font-weight-bold text-muted">{{$d['post']->title}}</p>
+                      <p class="text-center lead font-weight-bold text-muted">{{$d['post_title']}}</p>
                       <p>
-                      {{$d['post']->content}}
+                      {{$d['comment']->content}}
                       </p>
-                      <div class="col-lg-10">
-                        <div class="row">
-                      @if($d['post']->images)
-                        @foreach($d['images'] as $img)
-                          @if($img != "")
-                            <div class="col-lg-6">
-                              <img class="img-fluid mb-3" src="{{$img}}" alt="Photo">
-                            </div>
-                          @endif
-                        @endforeach            
-                      @endif 
-                        </div>
-                      </div>
-                      
-                      <div class="input-group mb-2">
-                        <input class="form-control form-control-sm" name="comment" type="text" placeholder="Type a comment" require>
-                        <button type="submit" class="btn btn-sm btn-default"><i class="fa fa-arrow-right"></i></button>
-                      </div>
-                  </form> 
-                  <p>
-                    <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
-                    <a href="#" class="link-black text-sm ml-2"><i class="far fa-thumbs-down"></i> Dislike</a>
-                    <span class="float-right">
-                      <a class="link-black text-sm" data-toggle="collapse" href="#comment-{{$d['post']->id}}" role="button" aria-expanded="false" aria-controls="comment-{{$d['post']->id}}">
-                        <i class="far fa-comments mr-1"></i> Comments ({{count($d['comments'])}})
-                      </a>
-                    </span>
-                  </p> 
-                      <div class="collapse" id="comment-{{$d['post']->id}}">
-                        @foreach($d['comments'] as $comment)
-                        <div class="card card-body">
-                          <div>
-                              <div>
-                                <img class="img-circle img-sm img-bordered-sm" src="{{\App\Models\User::where('login', $comment->author)->first()->profile_photo}}" alt="user image">  
-                                <a class="ml-1" href="{{route('users.update.view', ['user' => \App\Models\User::where('login', $comment->author)->first()->id])}}">{{$comment->author}}</a>
-                                <span class="text-muted text-sm text-right">{{$comment->created_at}}</span>
-                                @if($comment->status == "active")
-                                  <span class="float-right btn-tool text-success">{{$comment->status}}</span>
-                                @else
-                                  <span class="float-right btn-tool text-danger">{{$comment->status}}</span>
-                                @endif
-                              </div>
-                              <div class="mt-1 ml-2">
-                                <span>{{$comment->content}}</span>
-                              </div>
-                              <div class="d-flex justify-content-end">
-                                 <a class="link-black mr-3" href="" data-toggle="modal" data-target="#modal-edit-{{$comment->id}}">Edit</a>
-                                 <a class="link-black" href="" data-toggle="modal" data-target="#modal-deleteComment-{{$comment->id}}">Remove</a>
-                              </div>
-                          </div>                         
-                        </div>
-                        <div class="modal fade" id="modal-deleteComment-{{$comment->id}}">
-                          <div class="modal-dialog">
-                            <div class="modal-content bg-danger">
-                              <div class="modal-header">
-                                <h4 class="modal-title">Confirmation</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <p>You are about to delete a post. Are you sure? </p>
-                              </div>
-                              <form action="{{route('comments.delete', $comment->id)}}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <div class="modal-footer justify-content-between">
-                                  <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-outline-light">Delete</button>
-                                </div>
-                              </form>
-                            </div>
-                              <!-- /.modal-content -->
-                          </div>
-                          <!-- /.modal-dialog -->
-                        </div>
-                        <div class="modal fade" id="modal-edit-{{$comment->id}}">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h4 class="modal-title">Update Category</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <form action="{{route('comments.update', $comment->id)}}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="status">Comment's status</label>
-                                        <select id="status" name="status" class="form-control custom-select">
-                                            <option selected disabled>{{$comment->status}}</option>
-                                            <option>active</option>
-                                            <option>inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>
-                              </form>
-                            </div>
-                              <!-- /.modal-content -->
-                          </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        @endforeach
-                      </div>                  
-                  </div>
+                      <p>
+                        <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
+                        <a href="#" class="link-black text-sm ml-2"><i class="far fa-thumbs-down"></i> Dislike</a>
+                      </p>
+                </div>
                 </div>
                 <div class="card-footer">
                   <div class="text-right">
-                    <a href="{{route('posts.update.view', $d['post']->id)}}" class="btn btn-sm bg-teal mr-2">
-                      <i class="fas fa-pen"></i>Edit
+                    <a href="#" class="btn btn-sm bg-teal mr-2" data-toggle="modal" data-target="#modal-edit-{{$d['comment']->id}}">
+                      <i class="fas fa-pen"></i>Edit status
                     </a>
-                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-danger-{{$d['post']->id}}">
+                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-danger-{{$d['comment']->id}}">
                       <i class="fas fa-times"></i> Delete
                     </button>
                   </div>
                 </div>
-                <div class="modal fade" id="modal-danger-{{$d['post']->id}}">
+                <div class="modal fade" id="modal-danger-{{$d['comment']->id}}">
                   <div class="modal-dialog">
                     <div class="modal-content bg-danger">
                       <div class="modal-header">
@@ -332,9 +223,9 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <p>You are about to delete a post. Are you sure? </p>
+                        <p>You are about to delete a comment. Are you sure? </p>
                       </div>
-                      <form action="{{route('posts.delete', $d['post']->id)}}" method="POST">
+                      <form action="{{route('comments.delete', $d['comment']->id)}}" method="POST">
                       @csrf
                       @method('DELETE')
                         <div class="modal-footer justify-content-between">
@@ -346,6 +237,38 @@
                     <!-- /.modal-content -->
                   </div>
                   <!-- /.modal-dialog -->
+                </div>
+                <div class="modal fade" id="modal-edit-{{$d['comment']->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Category</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{{route('comments.update', $d['comment']->id)}}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="status">Comment's status</label>
+                                        <select id="status" name="status" class="form-control custom-select">
+                                            <option selected disabled>{{$d['comment']->status}}</option>
+                                            <option>active</option>
+                                            <option>inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
                 </div>
               </div>
             </div>

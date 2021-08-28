@@ -119,6 +119,12 @@
                 <p>Manage Categories</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('comments.list')}}" class="nav-link">
+                <i class="far fa-comment"></i>
+                <p>Manage Comments</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

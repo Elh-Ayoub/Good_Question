@@ -30,7 +30,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
     <title>Profile - {{env('APP_NAME')}}</title>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
@@ -131,6 +131,12 @@
               <a href="{{route('categories.list')}}" class="nav-link">
                 <i class="fas fa fa-list-alt"></i>
                 <p>Manage Categories</p>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a href="{{route('comments.list')}}" class="nav-link">
+                <i class="far fa-comment"></i>
+                <p>Manage Comments</p>
               </a>
           </li>
         </ul>

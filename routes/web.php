@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
@@ -113,4 +114,14 @@ Route::group([
     Route::patch('categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
 
+});
+ //////////////////// ----------Comments module----------  ////////////////////
+Route::group([
+    'middleware' => 'AuthCheck',
+    'prefix' => 'admin',
+], function () {
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments.list');
+    Route::post('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+    Route::patch('comments/update/{id}', [CommentController::class, 'updateStatus'])->name('comments.update');
+    Route::delete('comments/delete/{id}', [CommentController::class, 'destroy'])->name('comments.delete');
 });
