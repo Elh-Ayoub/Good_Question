@@ -165,7 +165,7 @@
     <div class="form-inline">
         <button type="button" class="btn btn-primary mb-2 mr-3" data-toggle="modal" data-target="#modal-default"><i class="fas fa-plus mr-2"></i>Create category</button>
         <div class="input-group mb-2" data-widget="sidebar-search">
-          <input type="text" id="myInput" onkeyup="searchbyName()" type="search" placeholder="Search...">
+          <input type="text" id="searchByCategory" type="search" placeholder="Search...">
             <div class="input-group-append">
               <button class="btn btn-sidebar">
                <i class="fas fa-search fa-fw"></i>
@@ -227,11 +227,11 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="title">Title</label>
-                                        <input type="text" id="title" name="title" class="form-control" maxlength="100" value="{{$category->title}}">
+                                        <input type="text" name="title" class="form-control" maxlength="100" value="{{$category->title}}">
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Description</label>
-                                        <textarea id="description" name="description" class="form-control" maxlength="200">{{$category->description}}</textarea>
+                                        <textarea name="description" class="form-control" maxlength="200">{{$category->description}}</textarea>
                                     </div>
                                 </div>
                                 <div class="modal-footer justify-content-between">

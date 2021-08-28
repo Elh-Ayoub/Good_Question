@@ -28,3 +28,17 @@ $("#searchByemail").on("keyup", function(e) {
         }
     }
 })
+$("#searchByCategory").on("keyup", function(e) {
+    filter = $(this).val().toUpperCase();
+    div = $(".categories");
+    title = $(".title");
+    for (i = 0; i < div.length; i++) {
+        byTitle = title[i].textContent || title[i].innerText;
+        if (byTitle.toUpperCase().indexOf(filter) > -1) {
+            div[i].setAttribute('style', 'display: table-row;');
+        } else {
+            div[i].setAttribute('style', 'display: none;');
+        }
+    }
+    console.log(e)
+})

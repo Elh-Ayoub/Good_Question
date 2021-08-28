@@ -18,6 +18,10 @@
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{{asset('images/Logo.png')}}" alt="AdminLTELogo" height="60" width="60">
+  </div>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -210,8 +214,8 @@
                         </span>
                       </p>
 
-                      <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
-                    </div>
+                      <input class="form-control form-control-sm" name="comment" type="text" placeholder="Type a comment">
+                </div>
                 </div>
                 <div class="card-footer">
                   <div class="text-right">
