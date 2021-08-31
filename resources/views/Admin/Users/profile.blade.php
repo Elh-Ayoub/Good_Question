@@ -125,6 +125,12 @@
                 <p>Manage Comments</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('likes.list')}}" class="nav-link">
+                <i class="fas fa-thumbs-up"></i>
+                <p>Manage Likes</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

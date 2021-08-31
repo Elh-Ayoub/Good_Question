@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Like;
 
 class PostController extends Controller
 {
@@ -53,8 +54,11 @@ class PostController extends Controller
         $posts = Post::all();
         foreach($posts as $post){
             $comments = Comment::where('post_id', $post->id)->get();
+            $likes = Like::where(['post_id'=> $post->id, 'type' => 'like'])->get();
+            $dislikes = Like::where(['post_id'=> $post->id, 'type' => 'dislike'])->get();
             array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first(),
-                 'images' => explode(" ", $post->images), 'comments' => $comments,
+                'images' => explode(" ", $post->images), 'comments' => $comments, 
+                'likes' => $likes , 'dislikes' => $dislikes,
             ]);
         }
         return view('Admin.Posts.list', ['data' => $data]);

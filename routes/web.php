@@ -6,9 +6,11 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LikeController;
 use App\Http\Controllers\Admin\VerifyEmailController;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Like;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -79,7 +81,8 @@ Route::group([
         $posts = count(Post::all());
         $categories = count(Category::all());
         $comments = count(Comment::all());
-        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts, 'categories' => $categories, 'comments' => $comments]);
+        $likes = count(Like::all());
+        return view('Admin.home', ['users' => $users, 'admins' => $admins, 'posts' => $posts, 'categories' => $categories, 'comments' => $comments, 'likes' => $likes]);
     })->name('admin.dashboard');
     Route::get('user/create', function(){
         return view('Admin.Users.create');
@@ -126,4 +129,20 @@ Route::group([
     Route::post('/comments/create', [CommentController::class, 'create'])->name('comments.create');
     Route::patch('comments/update/{id}', [CommentController::class, 'updateStatus'])->name('comments.update');
     Route::delete('comments/delete/{id}', [CommentController::class, 'destroy'])->name('comments.delete');
+});
+ //////////////////// ----------Like module----------  ////////////////////
+ Route::group([
+    'middleware' => 'AuthCheck',
+    'prefix' => 'admin',
+], function () {
+    Route::get('/likes', [LikeController::class, 'index'])->name('likes.list');
+    //like/dislike post
+    Route::post('post/like/create', [LikeController::class, 'createLikePost'])->name('like.post.create');
+    Route::post('post/dislike/create', [LikeController::class, 'createDislikePost'])->name('dislike.post.create');
+    //like/dislike comment
+    Route::post('comment/like/create', [LikeController::class, 'createLikeComment'])->name('like.comment.create');
+    Route::post('comment/dislike/create', [LikeController::class, 'createDislikeComment'])->name('dislike.comment.create');
+    //delete
+    Route::delete('likes/delete/{id}', [LikeController::class, 'destroy'])->name('likes.delete');
+
 });

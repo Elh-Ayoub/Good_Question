@@ -139,6 +139,12 @@
                 <p>Manage Comments</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('likes.list')}}" class="nav-link">
+                <i class="fas fa-thumbs-up"></i>
+                <p>Manage Likes</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -180,7 +186,7 @@
     </div>
     <div class="card card-solid">
         <div class="card-body pb-0">
-          <div class="row justify-content-between">
+          <div class="row justify-content-start">
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-danger">
@@ -249,6 +255,20 @@
                 <i class="far fa-comments"></i>
               </div>
               <a href="{{route('comments.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{$likes}}</h3>
+
+                <p>Like/Dislike</p>
+              </div>
+              <div class="icon">
+                <i class="far fa-thumbs-up"></i>
+              </div>
+              <a href="{{route('posts.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           </div>

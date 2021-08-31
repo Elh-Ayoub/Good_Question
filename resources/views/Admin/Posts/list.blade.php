@@ -127,6 +127,12 @@
                 <p>Manage Comments</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{route('likes.list')}}" class="nav-link">
+                <i class="fas fa-thumbs-up"></i>
+                <p>Manage Likes</p>
+              </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -220,13 +226,21 @@
                       </div>
                   </form> 
                   <p>
-                    <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
-                    <a href="#" class="link-black text-sm ml-2"><i class="far fa-thumbs-down"></i> Dislike</a>
+                    <div class="input-group">
+                      <form action="{{route('like.post.create', ['post_id' => $d['post']->id])}}" method="POST">
+                        @csrf
+                        <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count($d['likes'])}})</button>
+                      </form>
+                      <form action="{{route('dislike.post.create',['post_id' => $d['post']->id])}}" method="POST">
+                        @csrf
+                        <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count($d['dislikes'])}})</button>
+                      </form>
+                    </div>
                     <span class="float-right">
                       <a class="link-black text-sm" data-toggle="collapse" href="#comment-{{$d['post']->id}}" role="button" aria-expanded="false" aria-controls="comment-{{$d['post']->id}}">
                         <i class="far fa-comments mr-1"></i> Comments ({{count($d['comments'])}})
                       </a>
-                    </span>
+                    </span><br>
                   </p> 
                       <div class="collapse" id="comment-{{$d['post']->id}}">
                         @foreach($d['comments'] as $comment)
@@ -244,6 +258,16 @@
                               </div>
                               <div class="mt-1 ml-2">
                                 <span>{{$comment->content}}</span>
+                              </div>
+                              <div class="input-group">
+                                <form action="{{route('like.comment.create', ['comment_id' => $comment->id])}}" method="POST">
+                                  @csrf
+                                  <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like'])->get())}})</button>
+                                </form>
+                                <form action="{{route('dislike.comment.create',['comment_id' => $comment->id])}}" method="POST">
+                                  @csrf
+                                  <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike'])->get())}})</button>
+                                </form>
                               </div>
                               <div class="d-flex justify-content-end">
                                  <a class="link-black mr-3" href="" data-toggle="modal" data-target="#modal-edit-{{$comment->id}}">Edit</a>

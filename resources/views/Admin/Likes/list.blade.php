@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Users | {{env('APP_NAME')}}</title>
+  <title>Admin | {{env('APP_NAME')}}</title>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -26,7 +26,6 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
-  <style>.title, .table-row{cursor: pointer;}</style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -97,7 +96,7 @@
       @endif
       <!-- SidebarSearch Form -->
       <div class="form-inline mt-4">
-        <div class="input-group">
+        <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
             <button class="btn btn-sidebar">
@@ -117,7 +116,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link active">
+              <a href="{{route('users.list')}}" class="nav-link">
                 <i class="fa fa-user"></i>
                 <p>Manage Users</p>
               </a>
@@ -141,7 +140,7 @@
               </a>
           </li>
           <li class="nav-item">
-              <a href="{{route('likes.list')}}" class="nav-link">
+              <a href="{{route('likes.list')}}" class="nav-link active">
                 <i class="fas fa-thumbs-up"></i>
                 <p>Manage Likes</p>
               </a>
@@ -173,75 +172,66 @@
     <!-- /.content-header -->
     </section>
     <!-- Main content -->
-    @if(Session::get('success'))
-      <div class="alert alert-success col-sm-3" role="alert">
-        {{Session::get('success')}}
-      </div>
-    @endif
-    @if(Session::get('fail'))
-      <div class="alert alert-danger col-sm-3" role="alert">
-        {{Session::get('fail')}}
-      </div>
-    @endif
-    @if(Session::get('fail-arr'))
-      <div class="alert alert-danger col-sm-3" role="alert">
-        @foreach(Session::get('fail-arr') as $key => $err)
-          <p>{{$key . ': ' . $err[0]}}</p>
-        @endforeach
-      </div>
-    @endif
     <p id="result"></p>
     <section class="content">
-    <div class="form-inline justify-content-between mb-2">
-        <a href="{{route('create.user.view')}}" class="btn btn-primary col-sm-2"><i class="fas fa-plus"></i> Create new User/Admin</a>
-        <div class="input-group mb-1">
-          <input type="text" id="searchByLogin" type="search" placeholder="Search by login...">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-               <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-        </div>
-        <div class="input-group mb-1">
-          <input type="text" id="searchByemail" type="search" placeholder="Search by email...">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-               <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-        </div>
+    <div class="form-inline justify-content-center">
+        <button class="btn btn-info m-3">Only for posts <i class="fa fa-arrow-down"></i></button>
+        <button class="btn btn-info m-3">Only for comments <i class="fa fa-arrow-down"></i></button>
+        <button class="btn btn-info m-3">Both <i class="fa fa-arrow-down"></i> </button>
     </div>
     <div class="card card-solid">
         <div class="card-body pb-0">
-          <div class="row">
-            <table class="table text-center orders table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>#</th>
-                        <th><i class="fas fa-sort"></i><span class="title">Login</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Email</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Full name</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Role</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Rating</span></th>
-                        <th><i class="fas fa-sort"></i><span class="title">Created at</span></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($users as $user)
-                    <tr class="table-row" data-id="{{$user->id}}">
-                        <td><img class="img-size-64" src="{{$user->profile_photo}}" alt="Avatar"></td>
-                        <td class="login">{{$user->login}}</td>
-                        <td class="email">{{$user->email}}</td>
-                        <td class="full_name">{{$user->full_name}}</td>
-                        <td>{{$user->role}}</td>
-                        <td>{{$user->rating}}</td>
-                        <td class="created_at">{{$user->created_at}}</td>
-                        <td><a href="{{route('users.update.view', ['user' => $user->id])}}" type="button" class="btn btn-warning">Edit or Delete</a></td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+          <div class="row justify-content-start">
+            @foreach($data as $d)
+                <div class="col-lg-3 col-6 ">
+                    <!-- small box -->
+                    <div class="likes-box small-box @if($d['like']->type == 'like') bg-success @else bg-danger @endif">
+                        <div class="inner">
+                            <h3>Type: {{$d['like']->type}}</h3>
+                            <p>For @if($d['post'])
+                                Post: {{$d['post']->title}}
+                            @else
+                                Comment: {{$d['comment']->content}}
+                            @endif
+                            </p>
+                            <div><img class="img-circle img-sm img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image"><span class="ml-2">From: {{$d['like']->author}}</span></div>
+                        </div>
+                        <div class="icon">
+                            @if($d['like']->type == 'like')
+                                <i class="far fa-thumbs-up"></i>
+                            @else
+                                <i class="far fa-thumbs-down"></i>
+                            @endif
+                        </div>
+                        <a href="#" type="button" class="small-box-footer" data-toggle="modal" data-target="#modal-delete-{{$d['like']->id}}"><i class="fas fa-trash mr-1"></i>Delete</a>
+                    </div>
+                </div>
+                <div class="modal fade" id="modal-delete-{{$d['like']->id}}">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-danger">
+                      <div class="modal-header">
+                        <h4 class="modal-title">Confirmation</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>You are about to delete a Like. Are you sure? </p>
+                      </div>
+                      <form action="{{route('likes.delete', $d['like']->id)}}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-outline-light">Delete</button>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+            @endforeach
           </div>
         </div>
       </div>
@@ -254,10 +244,11 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.1.0
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
@@ -306,14 +297,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/lazyLoading.js')}}"></script>
 <script src="{{ asset('js/search.js')}}"></script>
-<script src="{{ asset('js/sortTable.js')}}"></script>
 <script src="{{ asset('plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
 <script src="{{ asset('plugins/bootstrap-slider/bootstrap-slider.min.js')}}"></script>
-<script>
-   $('.table-row').on('click', function(){
-      id = $(this).data('id');
-      window.location = "{{route('users.update.view')}}" + "?user="+id
-   })
-</script>
+<script src="{{ asset('js/filterLikes.js') }}"></script>
 </body>
 </html>
