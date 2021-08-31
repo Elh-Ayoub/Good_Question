@@ -26,6 +26,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/Logo.png')}}"/>
+  <style>#from span:hover{color: midnightblue;}</style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -175,26 +176,29 @@
     <p id="result"></p>
     <section class="content">
     <div class="form-inline justify-content-center">
-        <button class="btn btn-info m-3">Only for posts <i class="fa fa-arrow-down"></i></button>
-        <button class="btn btn-info m-3">Only for comments <i class="fa fa-arrow-down"></i></button>
-        <button class="btn btn-info m-3">Both <i class="fa fa-arrow-down"></i> </button>
+        <button class="filter btn btn-secondary m-3"><span class="filterBy" data-id="post">Only for posts</span><i class="icon ml-1"></i></button>
+        <button class="filter btn btn-secondary m-3"><span class="filterBy" data-id="comment">Only for comments</span><i class="icon ml-1"></i></button>
+        <button class="filter btn btn-info m-3"><span class="filterBy" data-id="both">Both</span><i class="icon ml-1 fa fa-arrow-down"></i> </button>
     </div>
     <div class="card card-solid">
         <div class="card-body pb-0">
           <div class="row justify-content-start">
             @foreach($data as $d)
-                <div class="col-lg-3 col-6 ">
+                <div class="col-lg-3 col-6 likes-box" data-type="@if($d['post'])post @else comment @endif">
                     <!-- small box -->
-                    <div class="likes-box small-box @if($d['like']->type == 'like') bg-success @else bg-danger @endif">
+                    <div class="small-box @if($d['like']->type == 'like') bg-success @else bg-danger @endif">
                         <div class="inner">
                             <h3>Type: {{$d['like']->type}}</h3>
                             <p>For @if($d['post'])
-                                Post: {{$d['post']->title}}
+                                <span class="type">Post</span>: {{$d['post']->title}}
                             @else
-                                Comment: {{$d['comment']->content}}
+                                <span class="type">Comment</span>: {{$d['comment']->content}}
                             @endif
                             </p>
-                            <div><img class="img-circle img-sm img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image"><span class="ml-2">From: {{$d['like']->author}}</span></div>
+                            <a id="from" class="text-white ml-1" href="{{route('users.update.view', ['user' => $d['author']->id])}}">
+                                <img class="img-circle img-sm img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
+                                <span class="ml-2">From: {{$d['like']->author}}</span>
+                            </a>
                         </div>
                         <div class="icon">
                             @if($d['like']->type == 'like')
