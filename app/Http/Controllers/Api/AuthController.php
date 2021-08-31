@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Product;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
-use Mail;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -25,23 +22,12 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            if(Auth::user()->role == 'admin'){
-                return redirect('admin/home');
-            }else{
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return back()->with('fail', 'Only Admins can log in.');
-            }
+            return  Auth::user();
         }
-        return back()->with('fail', 'The provided credentials do not match our records.');
+        
+        //return $request->all();
     }
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register(Request $request) {
+    public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'login' => 'required|string|unique:users|between:5,30',
             'full_name' => 'required|string|between:5,30',
@@ -49,7 +35,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:8',
         ]);
         if($validator->fails()){
-            return back()->with('fail', json_decode($validator->errors()->toJson()));
+            return json_decode($validator->errors()->toJson());
         }
         $name = substr($request->input('login'), 0, 2);
         $role = 'user';
@@ -64,36 +50,19 @@ class AuthController extends Controller
         ));
         event(new Registered($user));
         if($user){
-            return back()->with('success', 'Account created successfully. Please check mailbox to verify email.');
+            return ['success' => 'Account created successfully. Please check mailbox to verify email.'];
         }else{
-            return back()->with('fail', ['error' => 'Somthing went wrong! Try again.']);
+            return ['error' => 'Somthing went wrong! Try again.'];
         }
     }
+    
     public function logout(Request $request){
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('admin/auth/login');
+        return ['success' => 'logged out suucceessfully!'];
     }
-    public function useProfile() {
-        $data = ['loggedUserInfo' => Auth::user()];
-        return view('Admin.profile', $data);
-    }
-    public function dashboard(){
-        return view('home', ['products' => Product::all()]);
-    }
-    public function mailUser($user, $sm) {
-        $data = array('username'=> $user->username,
-          'full_name'=> $user->full_name,
-          'email' => $user->email,
-          'social_media' => $sm,
-        ); 
-        Mail::send('mailUser',$data, function($message ) use($data) {
-           $message->to($data['email'], 'Testing Point')->subject
-              ('Registration Email');
-           $message->from('ayoub.el-haddadi@gmail.com','WantOrder');
-        });
-    }
+
     function sendResetLink(Request $request){
         $request->validate(['email' => 'required|email']);
 
@@ -102,17 +71,18 @@ class AuthController extends Controller
         );
     
         return $status === Password::RESET_LINK_SENT
-                    ? back()->with(['success' => __($status)])
-                    : back()->with(['fail' => __($status)]);
+                    ? (['success' => __($status)])
+                    : (['fail' => __($status)]);
     }
-    function resetPassword(Request $request){
+    function resetPassword(Request $request, $token){
         $request->validate([
-            'token',
+            'token' => 'required',
             'email' => 'email',
             'password' => 'required|min:8|confirmed',
         ]);
+        
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            array_merge($request->only('email', 'password', 'password_confirmation'), ['token' => $token]),
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
@@ -122,7 +92,7 @@ class AuthController extends Controller
             }
         );
         return $status === Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('success', __($status))
-                    : back()->with(['email' => [__($status)]]);
+                    ? (['success' => __($status)])
+                    : (['email' => [__($status)]]);
     }
 }
