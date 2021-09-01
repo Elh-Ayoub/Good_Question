@@ -46,16 +46,34 @@ class UserController extends Controller
         $user->update(['profile_photo' => $defaulImgae]);
         return ['success' => 'Avatar deleted successfully!'];
     }
-    public function update(Request $request){
-        $user = Auth::user();
+    public function update(Request $request, $id){
+        $user = User::find($id);
         $validator = Validator::make($request->all(), [
-            'login' => 'unique:users|between:5,30',
-            'full_name' => 'between:5,30',
-            'email' => 'email|max:50|unique:users',
-            'password' => 'string|confirmed|min:8',
+            'login' => 'string|between:5,30',
+            'full_name' => 'string|between:5,30',
+            'email' => 'string|email|max:100',
         ]);
         if($validator->fails()){
             return json_decode($validator->errors()->toJson());
         }
+        $profile_photo = $user->profile_photo;
+        if($user->login != $request->login && User::where('login', $request->login)->first()){
+            return ['fail' => 'Login already exist!'];
+        }
+        if($user->email != $request->email && User::where('email', $request->email)->first()){
+            return ['fail' => 'Email already exist!'];
+        }
+        if($request->input('login') && !$request->file('profile_photo') && $user->login !== $request->input('login') ){
+            if(str_contains(parse_url($user->profile_photo, PHP_URL_PATH), '.png')){
+                $filename = str_replace(' ', '-', $request->input('login')) . '.png';
+                Storage::move(parse_url($user->profile_photo, PHP_URL_PATH),
+                '/profile-pictures/' . $filename);
+                $profile_photo = url('profile-pictures/'. $filename);
+            }else{
+                $profile_photo = 'https://ui-avatars.com//api//?name='.substr($request->login, 0, 2).'&color=7F9CF5&background=EBF4FF';
+            }
+        }
+        $user->update(array_merge($request->all(), ['profile_photo' => $profile_photo]));
+        return ['success' => 'Account Updated successfully!'];
     }
 }

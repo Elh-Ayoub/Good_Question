@@ -42,7 +42,8 @@ use App\Models\Comment;
     Route::get('users/{id}', [UserController::class, 'show']);
     Route::patch('users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
-    
+    Route::patch('users/{id}', [UserController::class, 'update']);
+
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Posts module----------  ////////////////////
