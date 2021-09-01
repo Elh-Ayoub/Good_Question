@@ -37,16 +37,12 @@ use App\Models\Comment;
 //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------User module----------  ////////////////////
+    Route::get('users/profile', [UserController::class, 'profile']);
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{id}', [UserController::class, 'show']);
-    Route::post('users', [UserController::class, 'store']);
-
-    Route::get('user/profile', [UserController::class, 'showProfile']);
-    Route::patch('/users/avatar', [UserController::class, 'updateAvatar']);
-    Route::delete('/users/avatar', [UserController::class, 'deleteAvatar']);
-    Route::post('/users/{id}', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'destroy']);
-
+    Route::patch('users/avatar', [UserController::class, 'updateAvatar']);
+    Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
+    
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Posts module----------  ////////////////////
