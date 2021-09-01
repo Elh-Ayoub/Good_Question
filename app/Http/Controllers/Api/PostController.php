@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
@@ -84,7 +83,6 @@ class PostController extends Controller
             $i++;
         }
         return $result;
-        
     }
     /**
      * Store a newly created resource in storage.
@@ -136,30 +134,30 @@ class PostController extends Controller
             return json_decode($validator->errors()->toJson());
         }
         $post = Post::find($id);
-        $categories = $post->categories;
-        if($request->categories){
-            $categories = explode(" ", $request->categories);
-            foreach($categories as $category){
-                $cat = Category::where('title', $category)->first();
-                if(!$cat){
-                    Category::create([
-                        'title' => trim($category),
-                    ]);
+        if($post && $post->author === Auth::user()->login){
+            $categories = $post->categories;
+            if($request->categories){
+                $categories = explode(" ", $request->categories);
+                foreach($categories as $category){
+                    $cat = Category::where('title', $category)->first();
+                    if(!$cat){
+                        Category::create([
+                            'title' => trim($category),
+                        ]);
+                    }
                 }
+                $categories = implode(", ", $categories);
             }
-            $categories = implode(", ", $categories);
+            $images = $post->images;
+            if($request->file('images')){
+                $images = $this->uploadMultiImages($request->file('images'));
+            }  
+            $post->update(array_merge($request->all(), ['images' => $images, 'categories' => $categories]));
+            return ['success' => 'Post updated successfully!']; 
+        }else{
+            return ['fail' => 'Post not exist or a post you didn\'t create!']; 
         }
-        $images = $post->images;
-        if($request->file('images')){
-            $images = $this->uploadMultiImages($request->file('images'));
-        }  
-        $post->update(array_merge($request->all(), ['images' => $images, 'categories' => $categories]));
-        return ['success' => 'Post updated successfully!'];
     }
-    public function getCategories($id){
-        return [Post::find($id)->categories];
-    }
-
     /**
      * Remove the specified resource from storage.
      *

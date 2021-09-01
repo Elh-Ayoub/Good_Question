@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LikeController;
-use App\Http\Controllers\Api\VerifyEmailController;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Like;
@@ -55,14 +54,14 @@ use App\Models\Comment;
  Route::patch('posts/{id}', [PostController::class, 'update']);
  Route::delete('posts/{id}', [PostController::class, 'destroy']);
 //comments of posts
-Route::get('posts/{id}/comments', [PostController::class, 'getComment']);
-Route::post('posts/{id}/comments', [PostController::class, 'createComment']);
+Route::get('posts/{id}/comments', [CommentController::class, 'getPostComments']);
+Route::post('posts/{id}/comments', [CommentController::class, 'createPostComment']);
 //categories of post
-Route::get('posts/{id}/categories', [PostController::class, 'getCategories']);
+Route::get('posts/{id}/categories', [CategoryController::class, 'getPostCategories']);
 //like of post
-Route::get('posts/{id}/like', [PostController::class, 'getLike']);
- Route::post('posts/{id}/like', [PostController::class, 'createLike']);
- Route::delete('posts/{id}/like', [PostController::class, 'deleteLike']);
+ Route::get('posts/{id}/like', [LikeController::class, 'getPostLike']);
+ Route::post('posts/{id}/like', [LikeController::class, 'createPostLike']);
+ Route::delete('posts/{id}/like', [LikeController::class, 'deletePostLike']);
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Categories module----------  ////////////////////

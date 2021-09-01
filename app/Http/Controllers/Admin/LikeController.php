@@ -42,7 +42,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where('post_id', $request->post_id)->first();
+        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::user()->login])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'like'){
@@ -75,7 +75,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where('post_id', $request->post_id)->first();
+        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::user()->login])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'dislike'){
@@ -108,7 +108,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where('comment_id', $request->comment_id)->first();
+        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::user()->login])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'like'){
@@ -140,7 +140,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where('comment_id', $request->comment_id)->first();
+        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::user()->login])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'dislike'){
