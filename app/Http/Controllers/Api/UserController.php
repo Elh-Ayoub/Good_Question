@@ -27,6 +27,9 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'image' => 'mimes:jpg,png|max:20000',
         ]);
+        if($validator->fails()){
+            return json_decode($validator->errors()->toJson());
+        }
         $user = Auth::user();
         $image = $request->file('image');
         if($image){
@@ -75,5 +78,10 @@ class UserController extends Controller
         }
         $user->update(array_merge($request->all(), ['profile_photo' => $profile_photo]));
         return ['success' => 'Account Updated successfully!'];
+    }
+    public function destroy($id)
+    {
+        User::destroy($id);
+        return ['success' => 'Account deleted successfully!'];
     }
 }

@@ -34,7 +34,7 @@ use App\Models\Comment;
     //Send reset password link
     Route::post('auth/password-reset',[AuthController::class, 'sendResetLink']);
     
-//////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------User module----------  ////////////////////
     Route::get('users/profile', [UserController::class, 'profile']);
@@ -43,13 +43,14 @@ use App\Models\Comment;
     Route::patch('users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
     Route::patch('users/{id}', [UserController::class, 'update']);
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
 
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Posts module----------  ////////////////////
 
  Route::get('posts', [PostController::class, 'index']);
- Route::post('posts', [PostController::class, 'store']);
+ Route::post('posts', [PostController::class, 'create']);
  Route::get('posts/{id}', [PostController::class, 'show']);
  Route::patch('posts/{id}', [PostController::class, 'update']);
  Route::delete('posts/{id}', [PostController::class, 'destroy']);
