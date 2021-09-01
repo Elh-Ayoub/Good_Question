@@ -34,8 +34,21 @@
                 <p class="success">{{Session::get('email')}}</p>
             </div>
         @endif
+        @if(Session::has('success'))
+            <div class="input-field">
+                <p class="success">{{Session::get('success')}}</p>
+            </div>
+        @endif
+        @if(Session::has('fail'))
+            <div class="input-field">
+                <p class="fail">{{Session::get('fail')}}</p>
+            </div>
+        @endif
         <div class="input-group mb-3" style="display: none;">
           <input type="password" class="form-control" name="token" value="{{$token}}">
+        </div>
+        <div class="input-group mb-3" style="display: none;">
+          <input type="email" class="form-control" name="email" value="{{$email}}">
         </div>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="New Password" name="password">

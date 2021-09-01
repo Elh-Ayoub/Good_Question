@@ -31,9 +31,9 @@ use App\Models\Comment;
     Route::post('auth/login', [AuthController::class, 'login'])->name('api.auth.login');
     Route::post('auth/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
     Route::post('auth/register', [AuthController::class, 'register'])->name('api.auth.register');
-    //reset password
-    Route::post('auth/password-reset',[AuthController::class, 'sendResetLink'])->middleware('guest');
-    Route::post('auth/password-reset/{token}', [AuthController::class, 'resetPassword'])->middleware('guest');
+    //Send reset password link
+    Route::post('auth/password-reset',[AuthController::class, 'sendResetLink']);
+    
 //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------User module----------  ////////////////////
@@ -45,13 +45,7 @@ use App\Models\Comment;
     Route::patch('/users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('/users/avatar', [UserController::class, 'deleteAvatar']);
     Route::post('/users/{id}', [UserController::class, 'update']);
-
-//  Route::get('update', function(){
-//      $user = User::find(1);
-//      User::where('id', 1)->update(['password' => '456']);
-//  });
-
-Route::delete('users/{id}', [UserController::class, 'destroy']);
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
 
  //////////////////////////////////////////////////////////////////////////
 

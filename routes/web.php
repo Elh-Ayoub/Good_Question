@@ -49,8 +49,8 @@ Route::group([
 Route::get('auth/forgot-password', function(){
     return view('Admin.Auth.forgot-password');
 })->name('password.forgot');
-Route::get('/reset-password/{token}', function ($token) {
-    return view('Admin.Auth.reset-password', ['token' => $token]);
+Route::get('/reset-password/{token}', function (Request $request, $token) {
+    return view('Admin.Auth.reset-password', ['token' => $token, 'email' => $request->email]);
 })->middleware('guest')->name('password.reset');
 Route::patch('auth/reset-password', [AuthController::class, 'resetPassword'])->middleware('guest')->name('password.update');
 Route::post('auth/forgot-password',[AuthController::class, 'sendResetLink'])->middleware('guest')->name('password.send');

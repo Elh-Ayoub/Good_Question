@@ -23,9 +23,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return  Auth::user();
+        }else{
+            return ['error' => 'Not matching our credentials!'];
         }
-        
-        //return $request->all();
     }
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
@@ -60,7 +60,11 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return ['success' => 'logged out suucceessfully!'];
+        if(!Auth::user()){
+            return ['success' => 'logged out suucceessfully!'];
+        }else{
+            return ['error' => 'Something went wrong!'];
+        }
     }
 
     function sendResetLink(Request $request){
