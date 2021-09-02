@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        return Post::where('status', 'active')->get();
     }
     /**
      * Show the form for creating a new resource.
@@ -166,8 +166,12 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        Post::destroy($id);
-        return ['success' => 'Post deleted successfully!'];
+        if(Post::find($id)){
+            Post::destroy($id);
+            return ['success' => 'Post deleted successfully!'];
+        }else{
+            return ['fail' => 'Post requested not exist!']; 
+        }      
     }
 }
 

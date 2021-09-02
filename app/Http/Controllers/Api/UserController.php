@@ -81,7 +81,11 @@ class UserController extends Controller
     }
     public function destroy($id)
     {
-        User::destroy($id);
-        return ['success' => 'Account deleted successfully!'];
+        if(User::find($id)){
+            User::destroy($id);
+            return ['success' => 'Account deleted successfully!'];
+        }else{
+            return ['fail' => 'User account not found!'];
+        }
     }
 }
