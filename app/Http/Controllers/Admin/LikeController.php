@@ -47,11 +47,13 @@ class LikeController extends Controller
             //if it's like
             if($checkLike->type == 'like'){
                 Like::destroy($checkLike->id);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Liked removed successfully!');
             }
             //if it's dislike
             else{
                 $checkLike->update(['type' => 'like']);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Liked post successfully!');
             }
         }else{
@@ -61,6 +63,7 @@ class LikeController extends Controller
                 'type' => 'like',
             ]);
             if($like){
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Like post successfully!');
             }else{
                 return back()->with('fail', 'Something went wrong!');
@@ -80,11 +83,13 @@ class LikeController extends Controller
             //if it's like
             if($checkLike->type == 'dislike'){
                 Like::destroy($checkLike->id);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Dislike removed successfully!');
             }
             //if it's dislike
             else{
                 $checkLike->update(['type' => 'dislike']);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'disiked post successfully!');
             }
         }else{
@@ -94,6 +99,7 @@ class LikeController extends Controller
                 'type' => 'dislike',
             ]);
             if($like){
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'disiked post successfully!');
             }else{
                 return back()->with('fail', 'Something went wrong!');
@@ -113,11 +119,13 @@ class LikeController extends Controller
             //if it's like
             if($checkLike->type == 'like'){
                 Like::destroy($checkLike->id);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Liked removed successfully!');
             }
             //if it's dislike
             else{
                 $checkLike->update(['type' => 'like']);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Liked comment successfully!');
             }
         }else{
@@ -127,6 +135,7 @@ class LikeController extends Controller
                 'type' => 'like',
             ]);
             if($like){
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Like comment successfully!');
             }else{
                 return back()->with('fail', 'Something went wrong!');
@@ -145,11 +154,13 @@ class LikeController extends Controller
             //if it's like
             if($checkLike->type == 'dislike'){
                 Like::destroy($checkLike->id);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'Dislike removed successfully!');
             }
             //if it's dislike
             else{
                 $checkLike->update(['type' => 'dislike']);
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'disiked comment successfully!');
             }
         }else{
@@ -159,11 +170,25 @@ class LikeController extends Controller
                 'type' => 'dislike',
             ]);
             if($like){
+                $this->calculateRating(Auth::user());
                 return back()->with('success', 'disiked comment successfully!');
             }else{
                 return back()->with('fail', 'Something went wrong!');
             }
         }
+    }
+
+    public function calculateRating($user){
+        $likes = Like::where('author', $user->login)->get();
+        $rating = 0;
+        foreach($likes as $like){
+            if($like->type == 'like'){
+                $rating++;
+            }else{
+                $rating--;
+            }
+        }
+        $user->update(['rating' => $rating]);
     }
 
     /**
@@ -175,6 +200,7 @@ class LikeController extends Controller
     public function destroy($id)
     {
         Like::destroy($id);
+        $this->calculateRating(Auth::user());
         return back()->with('success', 'Like/dislike deleted successfully!');
     }
 }

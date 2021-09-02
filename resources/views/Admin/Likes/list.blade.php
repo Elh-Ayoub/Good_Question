@@ -191,7 +191,7 @@
                             <h3>Type: {{$d['like']->type}}</h3>
                             <p>For @if($d['post'])
                                 <span class="type">Post</span>: {{$d['post']->title}}
-                            @else
+                            @elseif($d['comment'])
                                 <span class="type">Comment</span>: {{$d['comment']->content}}
                             @endif
                             </p>
