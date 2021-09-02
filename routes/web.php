@@ -27,12 +27,12 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('admin/auth/login');
 });
  //////////////////// ----------Authentication module----------  ////////////////////
 
 Route::group([
-    'middleware' => 'web',
+    'middleware' => ['web', 'AuthCheck'],
     'prefix' => 'admin',
 ], function () {
     Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');

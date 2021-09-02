@@ -21,7 +21,7 @@ class AuthCheck
             return redirect('admin/auth/login')->with('fail', 'You must be logged in first.');
         }
         if(Auth::user() && ($request->path() == 'admin/auth/login' || $request->path() == 'admin/auth/register')){
-            return redirect('/admin/dashboard');
+            return redirect('/admin/home');
         }
         return $next($request);
     }
