@@ -151,6 +151,8 @@
     </div>
     <!-- /.sidebar -->
   </aside>
+  <div class="content-wrapper">
+  <section class="content">
     <div class="profileContainer">
         <div class="profile-picture">
         <form  method="POST" action="{{route('admin.update.avatar')}}"  enctype="multipart/form-data">
@@ -242,6 +244,8 @@
                 @endif
             </form>
         </div>
+    </div>
+  </section>
     </div>
     </div>
     <!-- jQuery -->

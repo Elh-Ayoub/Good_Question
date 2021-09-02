@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -272,6 +273,8 @@
                   <div class="tab-pane" id="activity">
                     @foreach($posts as $post)
                     <div class="post">
+                    <form action="{{route('comments.create' , ['post_id' => $post->id])}}" method="POST">   
+                      @csrf
                       <div class="user-block mt-3">
                         <img class="img-circle img-bordered-sm" src="{{$user->profile_photo}}" alt="user image">
                         <span class="username">
@@ -288,29 +291,133 @@
                       <p>
                       {{$post->content}}
                       </p>
-                      <div class="col-lg-10">
-                        <div class="row">
-                      @if($post->images)
-                        @foreach(explode(' ',$post->images) as $img)
-                          @if($img != "")
-                            <div class="col-lg-6">
-                              <img class="img-fluid mb-3" src="{{$img}}" alt="Photo">
+                          <div class="col-lg-10">
+                            <div class="row">
+                          @if($post->images)
+                            @foreach(explode(' ',$post->images) as $img)
+                              @if($img != "")
+                                <div class="col-lg-6">
+                                  <img class="img-fluid mb-3" src="{{$img}}" alt="Photo">
+                                </div>
+                              @endif
+                            @endforeach            
+                          @endif 
                             </div>
-                          @endif
-                        @endforeach            
-                      @endif 
-                        </div>
-                      </div>
+                          </div>
+                          <div class="input-group mb-2">
+                            <input class="form-control form-control-sm" name="comment" type="text" placeholder="Type a comment" require>
+                            <button type="submit" class="btn btn-sm btn-default"><i class="fa fa-arrow-right"></i></button>
+                          </div>
+                        </form>
                       <p>
-                        <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
-                        <a href="#" class="link-black text-sm ml-2"><i class="far fa-thumbs-down"></i> Dislike</a>
+                      <div class="input-group">
+                        <form action="{{route('like.post.create', ['post_id' => $post->id])}}" method="POST">
+                          @csrf
+                          <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $post->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count(\App\Models\Like::where(['post_id' => $post->id, 'type' => 'like'])->get())}})</button>
+                        </form>
+                        <form action="{{route('dislike.post.create',['post_id' => $post->id])}}" method="POST">
+                          @csrf
+                          <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $post->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count(\App\Models\Like::where(['post_id' => $post->id, 'type' => 'dislike'])->get())}})</button>
+                        </form>
+                      </div>
                         <span class="float-right">
-                          <a href="#" class="link-black text-sm">
-                            <i class="far fa-comments mr-1"></i> Comments (5)
+                        <a class="link-black text-sm" data-toggle="collapse" href="#comment-{{$post->id}}" role="button" aria-expanded="false" aria-controls="comment-{{$post->id}}">
+                            <i class="far fa-comments mr-1"></i> Comments ({{count(\App\Models\Comment::where(['post_id' => $post->id])->get())}})
                           </a>
-                        </span>
+                        </span><br>
                       </p>
-                      <input class="form-control form-control-sm" type="text" placeholder="Type a comment">
+                      <div class="collapse" id="comment-{{$post->id}}">
+                        @foreach(\App\Models\Comment::where(['post_id' => $post->id])->get() as $comment)
+                        <div class="card card-body">
+                          <div>
+                              <div>
+                                <img class="img-circle img-sm img-bordered-sm" src="{{\App\Models\User::where('login', $comment->author)->first()->profile_photo}}" alt="user image">  
+                                <a class="ml-1" href="{{route('users.update.view', ['user' => \App\Models\User::where('login', $comment->author)->first()->id])}}">{{$comment->author}}</a>
+                                <span class="text-muted text-sm text-right">{{$comment->created_at}}</span>
+                                @if($comment->status == "active")
+                                  <span class="float-right btn-tool text-success">{{$comment->status}}</span>
+                                @else
+                                  <span class="float-right btn-tool text-danger">{{$comment->status}}</span>
+                                @endif
+                              </div>
+                              <div class="mt-1 ml-2">
+                                <span>{{$comment->content}}</span>
+                              </div>
+                              <div class="input-group">
+                                <form action="{{route('like.comment.create', ['comment_id' => $comment->id])}}" method="POST">
+                                  @csrf
+                                  <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like'])->get())}})</button>
+                                </form>
+                                <form action="{{route('dislike.comment.create',['comment_id' => $comment->id])}}" method="POST">
+                                  @csrf
+                                  <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike'])->get())}})</button>
+                                </form>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                 <a class="link-black mr-3" href="" data-toggle="modal" data-target="#modal-edit-{{$comment->id}}">Edit</a>
+                                 <a class="link-black" href="" data-toggle="modal" data-target="#modal-deleteComment-{{$comment->id}}">Remove</a>
+                              </div>
+                          </div>                         
+                        </div>
+                        <div class="modal fade" id="modal-deleteComment-{{$comment->id}}">
+                          <div class="modal-dialog">
+                            <div class="modal-content bg-danger">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Confirmation</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p>You are about to delete a post. Are you sure? </p>
+                              </div>
+                              <form action="{{route('comments.delete', $comment->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <div class="modal-footer justify-content-between">
+                                  <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-outline-light">Delete</button>
+                                </div>
+                              </form>
+                            </div>
+                              <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+                        <div class="modal fade" id="modal-edit-{{$comment->id}}">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Update Category</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <form action="{{route('comments.update', $comment->id)}}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="status">Comment's status</label>
+                                        <select id="status" name="status" class="form-control custom-select">
+                                            <option selected disabled>{{$comment->status}}</option>
+                                            <option>active</option>
+                                            <option>inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                              </form>
+                            </div>
+                              <!-- /.modal-content -->
+                          </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        @endforeach
+                      </div>
                     </div>
                     @endforeach
                   </div>

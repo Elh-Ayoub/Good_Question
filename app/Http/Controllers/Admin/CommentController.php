@@ -49,9 +49,9 @@ class CommentController extends Controller
             'post_id' => $request->post_id,
         ]);
         if($comment){
-            return redirect('admin/posts')->with('success', 'Commented in post successfully!');
+            return back()->with('success', 'Commented in post successfully!');
         }else{
-            return redirect('admin/posts')->with('fail', 'Something went wrong!');
+            return back()->with('fail', 'Something went wrong!');
         }
         // return $request->all();
     }
