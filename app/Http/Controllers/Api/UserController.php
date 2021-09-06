@@ -18,7 +18,9 @@ class UserController extends Controller
     public function show($id){
         return User::find($id);
     }
-
+    public function showByLogin($login){
+        return User::where('login', $login)->first();
+    }
     public function profile(){
         $user = Auth::user();
         return ['profile' => $user];
