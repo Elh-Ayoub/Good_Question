@@ -36,7 +36,7 @@ class UserController extends Controller
           $user = Auth::user();  
         }
         if($request->user){
-            $user = json_decode($request->user);
+            $user = $this->showByLogin($request->user);
         }
         $image = $request->file('image');
         if($image){
@@ -49,8 +49,12 @@ class UserController extends Controller
         }
         return response()->json('error', 404);
     }
-    public function deleteAvatar(){
-        $user = Auth::user();
+    public function deleteAvatar(Request $request){
+        //return $request->all();
+        $user = Auth::user();  
+        if($request->user){
+            $user = $this->showByLogin($request->user);
+        }
         $name = substr($user->login, 0, 2);
         $defaulImgae = 'https://ui-avatars.com//api//?name='.$name.'&color=7F9CF5&background=EBF4FF';
         $user->update(['profile_photo' => $defaulImgae]);
