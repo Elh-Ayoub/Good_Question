@@ -41,7 +41,7 @@ use App\Models\Comment;
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{login}', [UserController::class, 'showByLogin']);
     Route::get('users/{id}', [UserController::class, 'show']);
-    Route::patch('users/avatar', [UserController::class, 'updateAvatar'])->middleware('auth');
+    Route::post('users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar'])->middleware('auth');
     Route::patch('users/{id}', [UserController::class, 'update'])->middleware('auth');
     Route::delete('users/{id}', [UserController::class, 'destroy'])->middleware('auth');

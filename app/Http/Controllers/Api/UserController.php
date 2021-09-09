@@ -32,7 +32,12 @@ class UserController extends Controller
         if($validator->fails()){
             return json_decode($validator->errors()->toJson());
         }
-        $user = Auth::user();
+        if(Auth::user()){
+          $user = Auth::user();  
+        }
+        if($request->user){
+            $user = json_decode($request->user);
+        }
         $image = $request->file('image');
         if($image){
             $fileName =str_replace(' ', '-', $user->login) . '.png';
