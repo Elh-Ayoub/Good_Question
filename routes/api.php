@@ -43,6 +43,7 @@ use App\Models\Comment;
     Route::post('users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
     Route::patch('users/{id}', [UserController::class, 'update']);
+    Route::patch('users/{id}/password', [UserController::class, 'updatePassword']);
     Route::delete('users/{id}', [UserController::class, 'destroy'])->middleware('auth');
 
  //////////////////////////////////////////////////////////////////////////

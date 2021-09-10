@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -87,6 +88,24 @@ class UserController extends Controller
         }
         $user->update(array_merge($request->all(), ['profile_photo' => $profile_photo]));
         return ['success' => 'Account Updated successfully!'];
+    }
+    public function updatePassword(Request $request, $id){
+        $user = User::find($id);
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string|min:8',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
+        if($validator->fails()){
+            return json_decode($validator->errors()->toJson());
+        }
+        if(Hash::check($request->current_password, $user->password)){
+            $user->update([
+                'password' => bcrypt($request->password)
+            ]);
+            return ['success' => "Password updated successfully!"];
+        }else{
+            return ['error' => 'Password incorrect!'];
+        }
     }
     public function destroy($id)
     {
