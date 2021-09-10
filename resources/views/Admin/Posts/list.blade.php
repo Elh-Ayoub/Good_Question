@@ -229,11 +229,11 @@
                     <div class="input-group">
                       <form action="{{route('like.post.create', ['post_id' => $d['post']->id])}}" method="POST">
                         @csrf
-                        <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count($d['likes'])}})</button>
+                        <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'like', 'author' => Auth::id()])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count($d['likes'])}})</button>
                       </form>
                       <form action="{{route('dislike.post.create',['post_id' => $d['post']->id])}}" method="POST">
                         @csrf
-                        <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count($d['dislikes'])}})</button>
+                        <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['post_id' => $d['post']->id, 'type' => 'dislike', 'author' => Auth::id()])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count($d['dislikes'])}})</button>
                       </form>
                     </div>
                     <span class="float-right">
@@ -262,11 +262,11 @@
                               <div class="input-group">
                                 <form action="{{route('like.comment.create', ['comment_id' => $comment->id])}}" method="POST">
                                   @csrf
-                                  <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like'])->get())}})</button>
+                                  <button type="submit" class="link-black text-sm like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like', 'author' => Auth::id()])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Like({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'like'])->get())}})</button>
                                 </form>
                                 <form action="{{route('dislike.comment.create',['comment_id' => $comment->id])}}" method="POST">
                                   @csrf
-                                  <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike', 'author' => Auth::user()->login])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike'])->get())}})</button>
+                                  <button type="submit" class="link-black text-sm ml-2 like-btn"><i class="@if(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike', 'author' => Auth::id()])->first())fas fa-thumbs-up @else far fa-thumbs-up @endif mr-1"></i> Dislike({{count(\App\Models\Like::where(['comment_id' => $comment->id, 'type' => 'dislike'])->get())}})</button>
                                 </form>
                               </div>
                               <div class="d-flex justify-content-end">

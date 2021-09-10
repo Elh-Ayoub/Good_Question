@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -57,6 +58,7 @@ class UserController extends Controller
         return ['success' => 'Avatar deleted successfully!'];
     }
     public function update(Request $request, $id){
+        //return $request->all();
         $user = User::find($id);
         $validator = Validator::make($request->all(), [
             'login' => 'string|between:5,30',
@@ -73,7 +75,7 @@ class UserController extends Controller
         if($user->email != $request->email && User::where('email', $request->email)->first()){
             return ['fail' => 'Email already exist!'];
         }
-        if($request->input('login') && !$request->file('profile_photo') && $user->login !== $request->input('login') ){
+        if($request->login && !$request->file('profile_photo') && $user->login !== $request->login ){
             if(str_contains(parse_url($user->profile_photo, PHP_URL_PATH), '.png')){
                 $filename = str_replace(' ', '-', $request->input('login')) . '.png';
                 Storage::move(parse_url($user->profile_photo, PHP_URL_PATH),
