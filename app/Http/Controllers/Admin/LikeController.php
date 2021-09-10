@@ -23,7 +23,7 @@ class LikeController extends Controller
         $likes = Like::all();
         $data = [];
         foreach($likes as $like){
-            array_push($data, ['like' => $like, 'author' => User::where('login', $like->author)->first(),
+            array_push($data, ['like' => $like, 'author' => User::find($like->author),
                  'post' => Post::find($like->post_id), 'comment' => Comment::find($like->comment_id),
         ]);
         }
@@ -42,7 +42,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::user()->login])->first();
+        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::id()])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'like'){
@@ -58,7 +58,7 @@ class LikeController extends Controller
             }
         }else{
             $like = Like::create([
-                'author' => Auth::user()->login,
+                'author' => Auth::id(),
                 'post_id' => $request->post_id,
                 'type' => 'like',
             ]);
@@ -78,7 +78,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::user()->login])->first();
+        $checkLike = Like::where(['post_id' => $request->post_id, 'author' => Auth::id()])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'dislike'){
@@ -94,7 +94,7 @@ class LikeController extends Controller
             }
         }else{
             $like = Like::create([
-                'author' => Auth::user()->login,
+                'author' => Auth::id(),
                 'post_id' => $request->post_id,
                 'type' => 'dislike',
             ]);
@@ -114,7 +114,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::user()->login])->first();
+        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::id()])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'like'){
@@ -130,7 +130,7 @@ class LikeController extends Controller
             }
         }else{
             $like = Like::create([
-                'author' => Auth::user()->login,
+                'author' => Auth::id(),
                 'comment_id' => $request->comment_id,
                 'type' => 'like',
             ]);
@@ -149,7 +149,7 @@ class LikeController extends Controller
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
-        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::user()->login])->first();
+        $checkLike = Like::where(['comment_id'=> $request->comment_id, 'author' => Auth::id()])->first();
         if($checkLike){
             //if it's like
             if($checkLike->type == 'dislike'){
@@ -165,7 +165,7 @@ class LikeController extends Controller
             }
         }else{
             $like = Like::create([
-                'author' => Auth::user()->login,
+                'author' => Auth::id(),
                 'comment_id' => $request->comment_id,
                 'type' => 'dislike',
             ]);
@@ -179,7 +179,7 @@ class LikeController extends Controller
     }
 
     public function calculateRating($user){
-        $likes = Like::where('author', $user->login)->get();
+        $likes = Like::where('author', $user->id)->get();
         $rating = 0;
         foreach($likes as $like){
             if($like->type == 'like'){

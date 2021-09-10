@@ -49,7 +49,7 @@ class PostController extends Controller
         $categories = implode(", ", $categories);
         $images = $this->uploadMultiImages($request->file('images'));
         $post = Post::create([
-            'author' =>Auth::user()->login,
+            'author' =>Auth::id(),
             'title' => $request->title,
             'content' => $request->content,
             'categories' => $categories,
@@ -134,7 +134,7 @@ class PostController extends Controller
             return json_decode($validator->errors()->toJson());
         }
         $post = Post::find($id);
-        if($post && $post->author === Auth::user()->login){
+        if($post && $post->author === Auth::id()){
             $categories = $post->categories;
             if($request->categories){
                 $categories = explode(" ", $request->categories);

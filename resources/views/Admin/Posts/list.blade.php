@@ -192,7 +192,7 @@
                       <div class="user-block mt-3">
                         <img class="img-circle img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
                         <span class="username">
-                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['post']->author}}</a>
+                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['author']->login}}</a>
                           @if($d['post']->status == "active")
                           <span class="float-right btn-tool text-success">{{$d['post']->status}}</span>
                           @else
@@ -247,8 +247,8 @@
                         <div class="card card-body">
                           <div>
                               <div>
-                                <img class="img-circle img-sm img-bordered-sm" src="{{\App\Models\User::where('login', $comment->author)->first()->profile_photo}}" alt="user image">  
-                                <a class="ml-1" href="{{route('users.update.view', ['user' => \App\Models\User::where('login', $comment->author)->first()->id])}}">{{$comment->author}}</a>
+                                <img class="img-circle img-sm img-bordered-sm" src="{{\App\Models\User::find($comment->author)->profile_photo}}" alt="user image">  
+                                <a class="ml-1" href="{{route('users.update.view', ['user' => \App\Models\User::find($comment->author)->id])}}">{{\App\Models\User::find($comment->author)->login}}</a>
                                 <span class="text-muted text-sm text-right">{{$comment->created_at}}</span>
                                 @if($comment->status == "active")
                                   <span class="float-right btn-tool text-success">{{$comment->status}}</span>

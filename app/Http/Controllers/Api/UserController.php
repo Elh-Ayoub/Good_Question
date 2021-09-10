@@ -18,9 +18,6 @@ class UserController extends Controller
     public function show($id){
         return User::find($id);
     }
-    public function showByLogin($login){
-        return User::where('login', $login)->first();
-    }
     public function profile(){
         $user = Auth::user();
         return ['profile' => $user];
@@ -36,7 +33,7 @@ class UserController extends Controller
           $user = Auth::user();  
         }
         if($request->user){
-            $user = $this->showByLogin($request->user);
+            $user = $this->show($request->user);
         }
         $image = $request->file('image');
         if($image){
@@ -50,7 +47,6 @@ class UserController extends Controller
         return response()->json('error', 404);
     }
     public function deleteAvatar(Request $request){
-        //return $request->all();
         $user = Auth::user();  
         if($request->user){
             $user = $this->showByLogin($request->user);

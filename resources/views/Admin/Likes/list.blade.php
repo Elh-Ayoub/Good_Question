@@ -197,7 +197,7 @@
                             </p>
                             <a id="from" class="text-white ml-1" href="{{route('users.update.view', ['user' => $d['author']->id])}}">
                                 <img class="img-circle img-sm img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
-                                <span class="ml-2">From: {{$d['like']->author}}</span>
+                                <span class="ml-2">From: {{\App\Models\User::find($d['like']->author)->login}}</span>
                             </a>
                         </div>
                         <div class="icon">

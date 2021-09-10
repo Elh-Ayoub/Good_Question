@@ -16,7 +16,7 @@ class PostController extends Controller
     public function create(Request $request){
 
             $validator = Validator::make($request->all(), [
-                'author' => ['required', 'string', 'max:30'],
+                'author' => ['required', 'max:30'],
                 'title' => ['required', 'string', 'max:100'],
                 'content' => ['required', 'string', 'max:500'],
                 'categories' => ['required', 'max:255'],
@@ -56,7 +56,7 @@ class PostController extends Controller
             $comments = Comment::where('post_id', $post->id)->get();
             $likes = Like::where(['post_id'=> $post->id, 'type' => 'like'])->get();
             $dislikes = Like::where(['post_id'=> $post->id, 'type' => 'dislike'])->get();
-            array_push($data, ['post' => $post, 'author' => User::where('login', $post->author)->first(),
+            array_push($data, ['post' => $post, 'author' => User::find($post->author),
                 'images' => explode(" ", $post->images), 'comments' => $comments, 
                 'likes' => $likes , 'dislikes' => $dislikes,
             ]);

@@ -22,7 +22,7 @@ class CommentController extends Controller
         $data = [];
         $comments = Comment::all();
         foreach($comments as $comment){
-            array_push($data, ['comment' => $comment, 'author' => User::where('login', $comment->author)->first(),
+            array_push($data, ['comment' => $comment, 'author' => User::find($comment->author),
                 'post_title' => Post::find($comment->post_id)->title,
             ]);
         }
@@ -44,7 +44,7 @@ class CommentController extends Controller
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
         }
         $comment = Comment::create([
-            'author' => Auth::user()->login,
+            'author' => Auth::id(),
             'content' => $request->comment,
             'post_id' => $request->post_id,
         ]);

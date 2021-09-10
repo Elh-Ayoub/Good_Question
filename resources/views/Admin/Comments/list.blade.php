@@ -189,7 +189,7 @@
                       <div class="user-block mt-3">
                         <img class="img-circle img-bordered-sm" src="{{$d['author']->profile_photo}}" alt="user image">
                         <span class="username">
-                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['comment']->author}}</a>
+                          <a href="{{route('users.update.view', ['user' => $d['author']->id])}}">{{$d['author']->login}}</a>
                           @if($d['comment']->status == "active")
                           <span class="float-right btn-tool text-success">{{$d['comment']->status}}</span>
                           @else

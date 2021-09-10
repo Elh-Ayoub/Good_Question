@@ -15,7 +15,7 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('author');
+            $table->integer('author');
             $table->string('title');
             $table->timestamps();
             $table->enum('status', ['active','inactive'])->default('active');

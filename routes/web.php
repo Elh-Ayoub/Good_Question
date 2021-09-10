@@ -93,7 +93,7 @@ Route::group([
     Route::patch('avatar/update', [UserController::class, 'UpdateAvatar'])->name('admin.update.avatar');
     Route::delete('avatar/delete', [UserController::class, 'setDefaultAvatar'])->name('admin.delete.avatar');
     Route::get('/users', function(){return view('Admin.Users.list', ['users' => User::all()]);})->name('users.list');
-    Route::get('users/update',function(Request $request){$user = User::find($request->user);return view('Admin.Users.profile', ['user' => $user, 'posts' => Post::where('author', $user->login)->get()]);})->name('users.update.view');
+    Route::get('users/update',function(Request $request){$user = User::find($request->user);return view('Admin.Users.profile', ['user' => $user, 'posts' => Post::where('author', $user->id)->get()]);})->name('users.update.view');
     Route::patch('users/update',[UserController::class, 'updateProfiles'])->name('users.update');
     Route::delete('users/delete',[UserController::class, 'deleteProfiles'])->name('users.delete');
 });

@@ -15,7 +15,7 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('author');
+            $table->integer('author');
             $table->integer('post_id');
             $table->string('content');
             $table->enum('status', ['active','inactive'])->default('active');
