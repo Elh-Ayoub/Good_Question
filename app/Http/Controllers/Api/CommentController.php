@@ -25,8 +25,14 @@ class CommentController extends Controller
         if($validator->fails()){
             return json_decode($validator->errors()->toJson());
         }
+        $user_id = null;
+        if(Auth::user()){
+            $user_id = Auth::id();
+        }else{
+            $user_id = $request->user;
+        }
         $comment = Comment::create([
-            'author' => Auth::id(),
+            'author' => $user_id,
             'content' => $request->content,
             'post_id' => $id,
         ]);

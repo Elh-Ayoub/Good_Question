@@ -44,49 +44,49 @@ use App\Models\Comment;
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
     Route::patch('users/{id}', [UserController::class, 'update']);
     Route::patch('users/{id}/password', [UserController::class, 'updatePassword']);
-    Route::delete('users/{id}', [UserController::class, 'destroy'])->middleware('auth');
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
 
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Posts module----------  ////////////////////
 
  Route::get('posts', [PostController::class, 'index']);
- Route::post('posts', [PostController::class, 'create'])->middleware('auth');
+ Route::post('posts', [PostController::class, 'create']);
  Route::get('posts/{id}', [PostController::class, 'show']);
- Route::patch('posts/{id}', [PostController::class, 'update'])->middleware('auth');
- Route::delete('posts/{id}', [PostController::class, 'destroy'])->middleware('auth');
+ Route::patch('posts/{id}', [PostController::class, 'update']);
+ Route::delete('posts/{id}', [PostController::class, 'destroy']);
 //comments of posts
 Route::get('posts/{id}/comments', [CommentController::class, 'getPostComments']);
-Route::post('posts/{id}/comments', [CommentController::class, 'createPostComment'])->middleware('auth');
+Route::post('posts/{id}/comments', [CommentController::class, 'createPostComment']);
 //categories of post
 Route::get('posts/{id}/categories', [CategoryController::class, 'getPostCategories']);
 //like of post
  Route::get('posts/{id}/like', [LikeController::class, 'getPostLike']);
- Route::post('posts/{id}/like', [LikeController::class, 'createPostLike'])->middleware('auth');
- Route::delete('posts/{id}/like', [LikeController::class, 'deletePostLike'])->middleware('auth');
+ Route::post('posts/{id}/like', [LikeController::class, 'createPostLike']);
+ Route::delete('posts/{id}/like', [LikeController::class, 'deletePostLike']);
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Categories module----------  ////////////////////
   Route::get('categories', [CategoryController::class, 'index']);
   Route::get('categories/{id}', [CategoryController::class, 'show']);
   Route::get('categories/{id}/posts', [CategoryController::class, 'getPostsByCategory']);
-  Route::post('categories', [CategoryController::class, 'create'])->middleware('auth');
-  Route::patch('categories/{id}', [CategoryController::class, 'update'])->middleware('auth');
-  Route::delete('categories/{id}', [CategoryController::class, 'destroy'])->middleware('auth');
+  Route::post('categories', [CategoryController::class, 'create']);
+  Route::patch('categories/{id}', [CategoryController::class, 'update']);
+  Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
  //////////////////////////////////////////////////////////////////////////
 
  //////////////////// ----------Like module----------  ////////////////////
   Route::get('likes', [LikeController::class, 'index']);
-  Route::delete('likes/{id}', [LikeController::class, 'destroy'])->middleware('auth');
+  Route::delete('likes/{id}', [LikeController::class, 'destroy']);
  //////////////////////////////////////////////////////////////////////////
 
   //////////////////// ----------Comment module----------  ////////////////////
   Route::get('comments', [CommentController::class, 'index']);
   Route::get('comments/{id}', [CommentController::class, 'show']);
   Route::get('comments/{id}/like', [LikeController::class, 'getCommentLike']);
-  Route::post('comments/{id}/like', [LikeController::class, 'createCommentLike'])->middleware('auth');
-  Route::patch('comments/{id}', [CommentController::class, 'update'])->middleware('auth');
-  Route::delete('comments/{id}', [CommentController::class, 'destroy'])->middleware('auth');
-  Route::delete('comments/{id}/like', [LikeController::class, 'deleteCommentLike'])->middleware('auth');
+  Route::post('comments/{id}/like', [LikeController::class, 'createCommentLike']);
+  Route::patch('comments/{id}', [CommentController::class, 'update']);
+  Route::delete('comments/{id}', [CommentController::class, 'destroy']);
+  Route::delete('comments/{id}/like', [LikeController::class, 'deleteCommentLike']);
  //////////////////////////////////////////////////////////////////////////
 
