@@ -19,9 +19,10 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->timestamps();
             $table->enum('status', ['active','inactive'])->default('active');
-            $table->string('content');
-            $table->string('images')->nullable();
-            $table->string('categories')->nullable();
+            $table->text('content');
+            $table->text('images')->nullable();
+            $table->text('categories')->nullable();
+            $table->Integer('rating')->default(0);
         });
     }
 

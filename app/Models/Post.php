@@ -20,6 +20,7 @@ class Post extends Model
         'content',
         'categories',
         'images',
+        'rating'
     ];
 
     protected $casts = [

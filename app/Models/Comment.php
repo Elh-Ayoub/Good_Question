@@ -14,5 +14,7 @@ class Comment extends Model
         'publish_date',
         'content',
         'post_id',
+        'comment_id',
+        'rating',
     ];
 }

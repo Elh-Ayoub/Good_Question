@@ -29,6 +29,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
+        //return $request->all();
         $validator = Validator::make($request->all(), [
             'title' => ['required', 'string', 'max:100'],
             'content' => ['required', 'string', 'max:500'],
@@ -36,6 +37,13 @@ class PostController extends Controller
         ]);
         if($validator->fails()){
             return json_decode($validator->errors()->toJson());
+        }
+        $user_id = null;
+        if(Auth::user()){
+            $user_id = Auth::id();
+        }
+        if($request->user){
+            $user_id = $request->user;
         }
         $categories = explode(" ", $request->categories);
         foreach($categories as $category){
@@ -47,9 +55,9 @@ class PostController extends Controller
             }
         }
         $categories = implode(", ", $categories);
-        $images = $this->uploadMultiImages($request->file('images'));
+        $images = $this->uploadMultiImages($request->file('images'), $request->user);
         $post = Post::create([
-            'author' =>Auth::id(),
+            'author' => $user_id,
             'title' => $request->title,
             'content' => $request->content,
             'categories' => $categories,
@@ -62,7 +70,7 @@ class PostController extends Controller
             return ['fail' => 'Something went wrong!'];
         }  
     }
-    function uploadMultiImages($images){
+    function uploadMultiImages($images, $user_id = null){
         if(!$images){
             return null;
         }
@@ -70,10 +78,16 @@ class PostController extends Controller
         $result = "";
         foreach($images as $image){
             if($image){
-                $filename = str_replace(' ', '-', "post". '-' . Auth::user()->login . "-" . $i). '.png';
+                if(Auth::user()){
+                    $user = Auth::user();
+                }
+                if($user_id){
+                    $user= User::find($user_id);
+                }
+                $filename = str_replace(' ', '-', "post". '-' . $user->login . "-" . $i). '.png';
                 $j=2;
                 while(file_exists(public_path('/posts-images/' .$filename))){
-                    $filename  = str_replace(' ', '-', "post". '-' . Auth::user()->login). $j . "-" . $i . '.png';
+                    $filename  = str_replace(' ', '-', "post". '-' . $user->login). $j . "-" . $i . '.png';
                     $j++;
                 }
                 $image->store('public');
@@ -126,6 +140,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //return $request->all();
         $validator = Validator::make($request->all(), [
             'title' => ['string', 'max:100'],
             'categories' => ['max:255'],
@@ -133,8 +148,15 @@ class PostController extends Controller
         if($validator->fails()){
             return json_decode($validator->errors()->toJson());
         }
+        $user_id = null;
+        if(Auth::user()){
+            $user_id = Auth::id();
+        }
+        elseif($request->user){
+            $user_id = (int)$request->user;
+        }
         $post = Post::find($id);
-        if($post && $post->author === Auth::id()){
+        if($post && $post->author === $user_id){
             $categories = $post->categories;
             if($request->categories){
                 $categories = explode(" ", $request->categories);
@@ -150,7 +172,7 @@ class PostController extends Controller
             }
             $images = $post->images;
             if($request->file('images')){
-                $images = $this->uploadMultiImages($request->file('images'));
+                $images = $this->uploadMultiImages($request->file('images'), $request->user);
             }  
             $post->update(array_merge($request->all(), ['images' => $images, 'categories' => $categories]));
             return ['success' => 'Post updated successfully!']; 
