@@ -42,7 +42,33 @@ class CommentController extends Controller
             return ['fail' => 'Something went wrong!'];
         }
     }
-
+    public function getCommentComment($id){
+        return Comment::where('comment_id', $id)->get();
+    }
+    public function createCommentComment(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'content' => ['required', 'string', 'max:500'],
+        ]);
+        if($validator->fails()){
+            return json_decode($validator->errors()->toJson());
+        }
+        $user_id = null;
+        if(Auth::user()){
+            $user_id = Auth::id();
+        }else{
+            $user_id = $request->user;
+        }
+        $comment = Comment::create([
+            'author' => $user_id,
+            'content' => $request->content,
+            'comment_id' => $id,
+        ]);
+        if($comment){
+            return ['success' => 'Commented in comment successfully!'];
+        }else{
+            return ['fail' => 'Something went wrong!'];
+        }
+    }
     public function show($id){
         $comment = Comment::find($id);
         if($comment){

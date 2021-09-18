@@ -40,6 +40,7 @@ use App\Models\Comment;
     Route::get('users/profile', [UserController::class, 'profile']);
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{id}', [UserController::class, 'show']);
+    Route::get('users/{id}/posts', [UserController::class, 'showUserPosts']);
     Route::post('users/avatar', [UserController::class, 'updateAvatar']);
     Route::delete('users/avatar', [UserController::class, 'deleteAvatar']);
     Route::patch('users/{id}', [UserController::class, 'update']);
@@ -85,6 +86,8 @@ Route::get('posts/{id}/categories', [CategoryController::class, 'getPostCategori
   Route::get('comments/{id}', [CommentController::class, 'show']);
   Route::get('comments/{id}/like', [LikeController::class, 'getCommentLike']);
   Route::post('comments/{id}/like', [LikeController::class, 'createCommentLike']);
+  Route::get('comments/{id}/comment', [CommentController::class, 'getCommentComment']);
+  Route::post('comments/{id}/comment', [CommentController::class, 'createCommentComment']);
   Route::patch('comments/{id}', [CommentController::class, 'update']);
   Route::delete('comments/{id}', [CommentController::class, 'destroy']);
   Route::delete('comments/{id}/like', [LikeController::class, 'deleteCommentLike']);

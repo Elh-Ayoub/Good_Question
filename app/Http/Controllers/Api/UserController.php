@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -19,6 +20,9 @@ class UserController extends Controller
 
     public function show($id){
         return User::find($id);
+    }
+    public function showUserPosts($id){
+        return Post::where('author', $id)->get();
     }
     public function profile(){
         $user = Auth::user();
@@ -51,7 +55,7 @@ class UserController extends Controller
     public function deleteAvatar(Request $request){
         $user = Auth::user();  
         if($request->user){
-            $user = $this->showByLogin($request->user);
+            $user = User::find($request->user);
         }
         $name = substr($user->login, 0, 2);
         $defaulImgae = 'https://ui-avatars.com//api//?name='.$name.'&color=7F9CF5&background=EBF4FF';
