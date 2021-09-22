@@ -82,6 +82,12 @@
                   <div id="res"></div>
                   <input type="text" id="categories" class="form-control" maxlength="500" value="{{implode(' ', explode(', ',$post->categories))}}">
                 </div>
+                @if($post->author == Auth::id())
+                <div class="form-group">
+                  <label for="content">Content</label>
+                  <textarea id="content" name="content" class="form-control">{{$post->content}}</textarea>
+                </div>
+                @endif
                 <div class="form-group">
                   <label for="status">Post's status</label>
                   <select id="status" name="status" class="form-control custom-select">
@@ -92,7 +98,7 @@
                 </div>
                 <div class="form-group">
                   <label for="images">Add a picture(s)</label>
-                  <input type="file" id="images" name="images" class="form-control" multiple>
+                  <input type="file" id="images" name="images[]" class="form-control" multiple>
                 </div>
               <div class="col-12">
                 <a href="{{route('admin.dashboard')}}" class="btn btn-secondary">Cancel</a>

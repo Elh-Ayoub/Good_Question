@@ -83,6 +83,7 @@ class PostController extends Controller
             'author' => ['required', 'string', 'max:30'],
             'title' => ['required', 'string', 'max:100'],
             'categories' => ['max:255'],
+            'content' => ['max:500'],
         ]);
         if($validator->fails()){
             return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
@@ -92,7 +93,10 @@ class PostController extends Controller
         if($request->categories){
             $categories = implode(", ", $request->categories);
         }
-        $images = $this->uploadMultiImages($request);
+        $images = $post->images;
+        if($request->file('images')){
+          $images = $this->uploadMultiImages($request);  
+        }
         $post->update(array_merge($request->all(), ['images' => $images, 'categories' => $categories]));
         return redirect('admin/posts/update/' . $post->id)->with('success', 'Post updated successfully!');
     }

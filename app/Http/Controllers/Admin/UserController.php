@@ -72,7 +72,7 @@ class UserController extends Controller
     public function setDefaultAvatar(Request $request){
         $user = Auth::user();
         $name = substr($user->login, 0, 2);
-        File::delete(public_path(parse_url($user->profile_photo, PHP_URL)));
+        File::delete(public_path(parse_url($user->profile_photo, PHP_URL_PATH)));
         $profile_photo = 'https://ui-avatars.com//api//?name='.$name.'&color=7F9CF5&background=EBF4FF';
         DB::update('update users set profile_photo = ? where id = ?', [$profile_photo , $user->id]);
         return redirect('admin/profile');

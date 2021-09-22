@@ -164,6 +164,7 @@
                         <span class="description">Shared publicly - {{$post->created_at}}</span>
                       </div>
                       <!-- /.user-block -->
+                      <p class="text-center lead font-weight-bold text-muted">{{$post->title}}</p>
                       <p>
                       {{$post->content}}
                       </p>
