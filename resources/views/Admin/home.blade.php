@@ -29,129 +29,8 @@
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="{{asset('images/Logo.png')}}" alt="AdminLTELogo" height="60" width="60">
-  </div>
-
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{route('admin.dashboard')}}" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-    </ul>
-
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      @if(!Auth::user())
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('login')}}">Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('register')}}">Register</a>
-      </li>
-      @else
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('auth.logout')}}">Log out</a>
-      </li>
-      @endif
-      <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="{{route('admin.dashboard')}}" class="brand-link">
-      <img src="{{asset('images/Logo.png')}}" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
-      <span class="brand-text font-weight-light">GoodQuestion</span>
-    </a>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      @if(Auth::user())
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{Auth::user()->profile_photo}}" class="img-circle elevation-2" alt="User-Image">
-        </div>
-        <div class="info">
-          <a href="{{route('admin.profile')}}" class="d-block">{{Auth::user()->login}}</a>
-        </div>
-      </div>
-      @endif
-      <!-- SidebarSearch Form -->
-      <div class="form-inline mt-4">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item">
-              <a href="{{route('admin.dashboard')}}" class="nav-link active">
-                <i class="fa fa-home"></i>
-                <p>Home</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link">
-                <i class="fa fa-user"></i>
-                <p>Manage Users</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link">
-                <i class="fa fa-book"></i>
-                <p>Manage Posts</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('categories.list')}}" class="nav-link">
-                <i class="fas fa fa-list-alt"></i>
-                <p>Manage Categories</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('comments.list')}}" class="nav-link">
-                <i class="far fa-comment"></i>
-                <p>Manage Comments</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('likes.list')}}" class="nav-link">
-                <i class="fas fa-thumbs-up"></i>
-                <p>Manage Likes</p>
-              </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-
+  @include('Admin.layouts.navbar')
+  @include('Admin.layouts.sidebar')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -169,135 +48,108 @@
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
-    </section>
     <!-- Main content -->
     <p id="result"></p>
     <section class="content">
-    <div class="form-inline">
-        <div class="input-group mb-1" data-widget="sidebar-search">
-          <input type="text" id="myInput" onkeyup="searchbyName()" type="search" placeholder="Search...">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-               <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-        </div>
-    </div>
-    <div class="card card-solid">
+      <div class="form-inline">
+          <div class="input-group mb-1" data-widget="sidebar-search">
+            <input type="text" id="myInput" onkeyup="searchbyName()" type="search" placeholder="Search...">
+              <div class="input-group-append">
+                <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+                </button>
+              </div>
+          </div>
+      </div>
+      <div class="card card-solid">
         <div class="card-body pb-0">
           <div class="row justify-content-start">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{$admins}}</h3>
-
-                <p>Admins</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user-shield"></i>
-              </div>
-              <a href="{{route('users.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                  <div class="inner">
+                    <h3>{{$admins}}</h3>
+                    <p>Admins</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-user-shield"></i>
+                  </div>
+                  <a href="{{route('users.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
             </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{$users}}</h3>
-
-                <p>Users</p>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>{{$users}}</h3>
+                  <p>Users</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                </div>
+                <a href="{{route('users.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="{{route('users.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{$posts}}</h3>
-
-                <p>Posts</p>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>{{$posts}}</h3>
+                  <p>Posts</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-book"></i>
+                </div>
+                <a href="{{route('posts.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="fa fa-book"></i>
-              </div>
-              <a href="{{route('posts.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-primary">
-              <div class="inner">
-                <h3>{{$categories}}</h3>
-
-                <p>Categories</p>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-primary">
+                <div class="inner">
+                  <h3>{{$categories}}</h3>
+                  <p>Categories</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa fa-list-alt"></i>
+                </div>
+                <a href="{{route('categories.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="fas fa fa-list-alt"></i>
-              </div>
-              <a href="{{route('categories.list')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-secondary">
-              <div class="inner">
-                <h3>{{$comments}}</h3>
-
-                <p>Comments</p>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-secondary">
+                <div class="inner">
+                  <h3>{{$comments}}</h3>
+                  <p>Comments</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-comments"></i>
+                </div>
+                <a href="{{route('comments.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="far fa-comments"></i>
-              </div>
-              <a href="{{route('comments.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{$likes}}</h3>
-
-                <p>Like/Dislike</p>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>{{$likes}}</h3>
+                  <p>Like/Dislike</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-thumbs-up"></i>
+                </div>
+                <a href="{{route('posts.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="far fa-thumbs-up"></i>
-              </div>
-              <a href="{{route('posts.list')}}" class="small-box-footer">More info<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-          </div>
           </div>
         </div>
-      </div>
-        <!-- /.card-body -->
-        <!-- <div id="loadmore" class="alert alert-info alert-dismissible text-center" style="cursor: pointer;"><i class="fas fa-caret-down"></i> Load More</div> -->
-        <!-- /.card-footer -->
       </div>
     </section>
     <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.1.0
-    </div>
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+  @include('Admin.layouts.footer')
 </div>
-<!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->

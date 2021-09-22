@@ -19,14 +19,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $data = [];
-        $comments = Comment::all();
-        foreach($comments as $comment){
-            array_push($data, ['comment' => $comment, 'author' => User::find($comment->author),
-                'post_title' => Post::find($comment->post_id)->title,
-            ]);
-        }
-        return view('Admin.Comments.list', ['data' => $data]);
+        $comments = Comment::simplePaginate(12);
+        return view('Admin.Comments.list', ['comments' => $comments]);
     }
 
     /**
@@ -56,6 +50,25 @@ class CommentController extends Controller
         // return $request->all();
     }
 
+    public function createReply(Request $request){
+        $validator = Validator::make($request->all(), [
+            'reply' => ['required', 'string', 'max:500'],
+            'comment_id' => ['required', 'string'],
+        ]);
+        if($validator->fails()){
+            return back()->with('fail-arr', json_decode($validator->errors()->toJson()));
+        }
+        $reply = Comment::create([
+            'author' => Auth::id(),
+            'content' => $request->reply,
+            'comment_id' => $request->comment_id,
+        ]);
+        if($reply){
+            return back()->with('success', 'reply in comment successfully!');
+        }else{
+            return back()->with('fail', 'Something went wrong!');
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *

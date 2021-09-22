@@ -127,6 +127,7 @@ Route::group([
 ], function () {
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.list');
     Route::post('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+    Route::post('/comments/reply/create', [CommentController::class, 'createReply'])->name('comments.reply.create');
     Route::patch('comments/update/{id}', [CommentController::class, 'updateStatus'])->name('comments.update');
     Route::delete('comments/delete/{id}', [CommentController::class, 'destroy'])->name('comments.delete');
 });

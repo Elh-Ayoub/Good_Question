@@ -31,223 +31,106 @@
     <title>Profile - {{env('APP_NAME')}}</title>
 </head>
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
-  <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{asset('images/Logo.png')}}" alt="AdminLTELogo" height="60" width="60">
-    </div>
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-    </ul>
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-    @if(!Auth::user())
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('login')}}">Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('register')}}">Register</a>
-      </li>
-      @else
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('auth.logout')}}">Log out</a>
-      </li>
-      @endif
-      <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="{{route('admin.dashboard')}}" class="brand-link">
-      <img src="{{asset('images/Logo.png')}}" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
-      <span class="brand-text font-weight-light">GoodQuestion</span>
-    </a>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{Auth::user()->profile_photo}}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="{{route('admin.profile')}}" class="d-block">{{Auth::user()->login}}</a>
-        </div>
-      </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-          <li class="nav-item">
-              <a href="{{route('admin.dashboard')}}" class="nav-link">
-                <i class="fa fa-home"></i>
-                <p>Home</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('users.list')}}" class="nav-link">
-                <i class="fa fa-briefcase"></i>
-                <p>Manage Users</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('posts.list')}}" class="nav-link">
-                <i class="fa fa-book"></i>
-                <p>Manage Posts</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('categories.list')}}" class="nav-link">
-                <i class="fas fa fa-list-alt"></i>
-                <p>Manage Categories</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('comments.list')}}" class="nav-link">
-                <i class="far fa-comment"></i>
-                <p>Manage Comments</p>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{route('likes.list')}}" class="nav-link">
-                <i class="fas fa-thumbs-up"></i>
-                <p>Manage Likes</p>
-              </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-  <div class="content-wrapper">
-  <section class="content">
-    <div class="profileContainer">
-        <div class="profile-picture">
-        <form  method="POST" action="{{route('admin.update.avatar')}}"  enctype="multipart/form-data">
-        @csrf
-        @method('PATCH')
-            <img id="profile-pic" class="user-picture" src="{{Auth::user()->profile_photo}}">
-            <div class="file-submit">
-                <label class="selectfile" for="choosefile">Edit profile picture</label>
-                <input id="choosefile" type="file" name="image" style="opacity: 0;position: absolute; z-index: -1;"> 
-                <input class="save-btn"type="submit" value="save">
+  <div class="wrapper">
+    @include('Admin.layouts.navbar')
+    @include('Admin.layouts.sidebar')
+    <div class="content-wrapper">
+      <section class="content">
+        <div class="profileContainer">
+            <div class="profile-picture">
+              <form  method="POST" action="{{route('admin.update.avatar')}}"  enctype="multipart/form-data">
+              @csrf
+              @method('PATCH')
+                  <img id="profile-pic" class="user-picture" src="{{Auth::user()->profile_photo}}">
+                  <div class="file-submit">
+                      <label class="selectfile" for="choosefile">Edit profile picture</label>
+                      <input id="choosefile" type="file" name="image" style="opacity: 0;position: absolute; z-index: -1;"> 
+                      <input class="save-btn"type="submit" value="save">
+                  </div>
+              </form>
+              @if(strpos(Auth::user()->profile_photo, ".png") !== false)
+              <form method="POST" action="{{route('admin.delete.avatar')}}">
+                  @csrf
+                  @method('DELETE')
+                  <input type="submit" class="deleteavatar" value="Remove Photo">
+              </form>
+              @endif
             </div>
-        </form>
-        @if(strpos(Auth::user()->profile_photo, ".png") !== false)
-        <form method="POST" action="{{route('admin.delete.avatar')}}">
-            @csrf
-            @method('DELETE')
-            <input type="submit" class="deleteavatar" value="Remove Photo">
-        </form>
-        @endif
-        </div>
-        
-        <div class="forms">
-            <form class="profileform" method="POST" action="{{route('admin.update')}}">
-                <p style="font-size: medium; color: #2d3748">You can edit your personal information.</p>
-                @csrf
-                @method('PATCH')
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="login">Login</label>
-                    <input id="login" class="inputText" type="text" name="login" value="{{Auth::user()->login}}" required/>
-                </div>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="email">email</label>
-                    <input id="email" class="inputText" type="email" name="email" value="{{Auth::user()->email}}" required/>
-                </div>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="full_name">Full name</label>
-                    <input id="full_name" class="inputText" type="text" name="full_name" value="{{Auth::user()->full_name}}" required/>
-                </div>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="role">Role</label>
-                    <span id="role" class="inputText">{{Auth::user()->role}}</span>
-                </div>
-                <div class="txt-btn">
-                    <input class="save-btn" type="submit" class="ml-4" value="save">
-                </div>
-                @if(Session::get('personal-fail'))
-                <div class="input-field">
-                    <p class="fail">{{Session::get('personal-fail')}}</p>
-                </div>
-                @endif
-            </form>
-                
-            <form class="profileform" method="POST" action="{{route('admin.password')}}">
-                @csrf
-                @method('PATCH')
-                <p style="font-size: medium; color: #2d3748">You can edit your password.</p>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="current_password">Current password</label>
-                    <input id="current_password" class="inputText" type="password" name="current_password" required/>
-                </div>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="new_password">New password</label>
-                    <input id="new_password" class="inputText" type="password" name="password" required/>
-                </div>
-                <div class="input-field" style="margin-bottom: 10px;">
-                    <label for="password_confirmation">Confirm new password</label>
-                    <input id="password_confirmation" class="inputText" type="password" name="password_confirmation" required/>
-                </div>
-                <div class="txt-btn">
-                    <input class="save-btn" type="submit" class="ml-4" value="save">
-                </div>
-                @if(Session::get('password-success'))
-                <div class="input-field">
-                    <p class="success">{{Session::get('password-success')}}</p>
-                </div>
-                @endif
+            <div class="forms">
+                <form class="profileform" method="POST" action="{{route('admin.update')}}">
+                    <p style="font-size: medium; color: #2d3748">You can edit your personal information.</p>
+                    @csrf
+                    @method('PATCH')
+                    <div class="input-field" style="margin-bottom: 10px;">
+                        <label for="login">Login</label>
+                        <input id="login" class="inputText" type="text" name="login" value="{{Auth::user()->login}}" required/>
+                    </div>
+                    <div class="input-field" style="margin-bottom: 10px;">
+                        <label for="email">email</label>
+                        <input id="email" class="inputText" type="email" name="email" value="{{Auth::user()->email}}" required/>
+                    </div>
+                    <div class="input-field" style="margin-bottom: 10px;">
+                        <label for="full_name">Full name</label>
+                        <input id="full_name" class="inputText" type="text" name="full_name" value="{{Auth::user()->full_name}}" required/>
+                    </div>
+                    <div class="input-field" style="margin-bottom: 10px;">
+                        <label for="role">Role</label>
+                        <span id="role" class="inputText">{{Auth::user()->role}}</span>
+                    </div>
+                    <div class="txt-btn">
+                        <input class="save-btn" type="submit" class="ml-4" value="save">
+                    </div>
+                    @if(Session::get('personal-fail'))
+                    <div class="input-field">
+                        <p class="fail">{{Session::get('personal-fail')}}</p>
+                    </div>
+                    @endif
+                </form>
+                    
+                <form class="profileform" method="POST" action="{{route('admin.password')}}">
+                    @csrf
+                    @method('PATCH')
+                    <p style="font-size: medium; color: #2d3748">You can edit your password.</p>
+                    <div class="input-field mb-2">
+                        <label for="current_password">Current password</label>
+                        <input id="current_password" class="inputText" type="password" name="current_password" required/>
+                    </div>
+                    <div class="input-field mb-2">
+                        <label for="new_password">New password</label>
+                        <input id="new_password" class="inputText" type="password" name="password" required/>
+                    </div>
+                    <div class="input-field mb-2">
+                        <label for="password_confirmation">Confirm new password</label>
+                        <input id="password_confirmation" class="inputText" type="password" name="password_confirmation" required/>
+                    </div>
+                    <div class="txt-btn">
+                        <input class="save-btn" type="submit" class="ml-4" value="save">
+                    </div>
+                    @if(Session::get('password-success'))
+                    <div class="input-field">
+                        <p class="success">{{Session::get('password-success')}}</p>
+                    </div>
+                    @endif
 
-                @if(Session::get('password-fail'))
-                <div class="input-field">
-                    <p class="fail">{{Session::get('password-fail')}}</p>
-                </div>
-                @endif
-                @if(Session::get('password-fail-arr'))
-                <div class="input-field">
-                    @foreach(Session::get('password-fail-arr') as $key => $err)
-                    <p class="fail">{{$key . ': ' . $err[0]}}</p>
-                    @endforeach
-                </div>
-                @endif
-            </form>
+                    @if(Session::get('password-fail'))
+                    <div class="input-field">
+                        <p class="fail">{{Session::get('password-fail')}}</p>
+                    </div>
+                    @endif
+                    @if(Session::get('password-fail-arr'))
+                    <div class="input-field">
+                        @foreach(Session::get('password-fail-arr') as $key => $err)
+                        <p class="fail">{{$key . ': ' . $err[0]}}</p>
+                        @endforeach
+                    </div>
+                    @endif
+                </form>
+            </div>
         </div>
+      </section>
     </div>
-  </section>
-    </div>
-    </div>
+    @include('Admin.layouts.footer')
+  </div>
     <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->

@@ -25,7 +25,7 @@ class LikeController extends Controller
         foreach($likes as $like){
             array_push($data, ['like' => $like, 'author' => User::find($like->author),
                  'post' => Post::find($like->post_id), 'comment' => Comment::find($like->comment_id),
-        ]);
+            ]);
         }
         return view('Admin.Likes.list', ['data' => $data]);
     }

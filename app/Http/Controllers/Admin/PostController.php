@@ -51,17 +51,8 @@ class PostController extends Controller
 
     function Postlist(){
         $data = [];
-        $posts = Post::all();
-        foreach($posts as $post){
-            $comments = Comment::where('post_id', $post->id)->get();
-            $likes = Like::where(['post_id'=> $post->id, 'type' => 'like'])->get();
-            $dislikes = Like::where(['post_id'=> $post->id, 'type' => 'dislike'])->get();
-            array_push($data, ['post' => $post, 'author' => User::find($post->author),
-                'images' => explode(" ", $post->images), 'comments' => $comments, 
-                'likes' => $likes , 'dislikes' => $dislikes,
-            ]);
-        }
-        return view('Admin.Posts.list', ['data' => $data]);
+        $posts = Post::simplePaginate(10);
+        return view('Admin.Posts.list', ['posts' => $posts]);
     }
     function uploadMultiImages($request){
         $images = $request->file('images');
