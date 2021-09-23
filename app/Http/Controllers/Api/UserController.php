@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Mail;
 
 class UserController extends Controller
 {
@@ -110,6 +111,28 @@ class UserController extends Controller
         }else{
             return ['error' => 'Password incorrect!'];
         }
+    }
+    public function sendemail(Request $request){
+       // return $request->all();
+        $validator = Validator::make($request->all(), [
+            'full_name' => 'required|string|between:5,30',
+            'email' => 'required|string|email|max:100',
+            'subject' => 'required|string|max:200',
+            'message' => 'required|string',
+        ]);
+        if($validator->fails()){
+            return json_decode($validator->errors()->toJson());
+        }
+        $data = array('name'=> $request->full_name,
+          'email'=> $request->email,
+          'subject' => $request->subject,
+          'content' => $request->message,
+        );
+        Mail::send('Admin.Email.contactMail',$data, function($message ) use($data) {
+            $message->to(env('MAIL_USERNAME'), 'Contact')->subject($data['subject']);
+            $message->from($data['email'], $data['name']);
+        });
+        return ['success' => 'Email sent successfully!'];
     }
     public function destroy($id)
     {

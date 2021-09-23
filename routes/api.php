@@ -92,4 +92,6 @@ Route::get('posts/{id}/categories', [CategoryController::class, 'getPostCategori
   Route::delete('comments/{id}', [CommentController::class, 'destroy']);
   Route::delete('comments/{id}/like', [LikeController::class, 'deleteCommentLike']);
  //////////////////////////////////////////////////////////////////////////
+ //send email to administration
+ Route::post('email/contact/admin', [UserController::class, 'sendemail']);
 
